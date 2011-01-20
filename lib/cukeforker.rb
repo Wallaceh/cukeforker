@@ -1,30 +1,12 @@
 require "cucumber/cli/main"
 require "fileutils"
+require "observer"
 
 module CukeForker
-  TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-
-  def self.shutting_down?
-    !!@shutting_down
-  end
-
-  def self.shutting_down!
-    @shutting_down = true
-  end
-
-  def self.log
-    @log ||= (
-      log = Logger.new STDOUT
-      log.datetime_format = TIME_FORMAT
-
-      log
-    )
-  end
-
 end
 
-require 'cukeforker/manager'
-require 'cukeforker/queue'
-require 'cukeforker/vnc'
+require 'cukeforker/display_pool'
+require 'cukeforker/abstract_listener'
 require 'cukeforker/worker'
-require 'cukeforker/master'
+require 'cukeforker/worker_queue'
+require 'cukeforker/runner'
