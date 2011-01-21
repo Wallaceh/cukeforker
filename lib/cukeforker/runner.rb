@@ -23,7 +23,8 @@ module CukeForker
       :vnc    => false,
       :notify => [],
       :out    => Dir.pwd,
-      :log    => true
+      :log    => true,
+      :format => :html
     }
 
     def self.run(*args)

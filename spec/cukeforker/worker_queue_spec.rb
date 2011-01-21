@@ -63,7 +63,7 @@ module CukeForker
       workers[1].stub(:start => nil, :finished? => true)
       workers[2].stub(:start => nil, :finished? => false)
 
-      listener.should_receive(:on_worker_started).exactly(3).times
+      listener.should_receive(:on_worker_starting).exactly(3).times
       queue.fill
 
       listener.should_receive(:on_worker_finished).exactly(2).times

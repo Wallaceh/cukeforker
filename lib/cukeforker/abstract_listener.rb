@@ -7,9 +7,6 @@ module CukeForker
     def on_worker_starting(worker)
     end
 
-    # def on_worker_started(worker)
-    # end
-
     def on_worker_finished(worker)
     end
 
