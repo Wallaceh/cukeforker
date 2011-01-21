@@ -16,6 +16,12 @@ module CukeForker
     def on_run_finished(failed)
     end
 
+    def on_display_fetched(id)
+    end
+
+    def on_display_released(id)
+    end
+
     def update(meth, *args)
       __send__(meth, *args)
     end

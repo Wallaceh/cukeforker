@@ -15,6 +15,10 @@ module CukeForker
       def start
         # noop
       end
+
+      def display
+        ":1"
+      end
     end
   end
 end

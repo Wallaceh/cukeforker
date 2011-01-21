@@ -40,5 +40,15 @@ module CukeForker
       lambda { pool.get }.should raise_error(VncServerPool::OutOfDisplaysError)
     end
 
+    it "notifies observers" do
+      observer = mock(AbstractListener)
+
+      observer.should_receive(:update).with :on_display_fetched, ":1"
+      observer.should_receive(:update).with :on_display_released, ":1"
+
+      pool.add_observer observer
+      pool.release pool.get
+    end
+
   end # VncServerPool
 end # CukeForker
