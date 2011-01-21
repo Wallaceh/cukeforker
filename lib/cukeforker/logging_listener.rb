@@ -9,15 +9,19 @@ module CukeForker
     end
 
     def on_worker_starting(worker)
-      log.info "[           worker           ] starting: #{worker.feature}"
+      log.info "[            worker:#{worker.id}           ] starting: #{worker.feature}"
     end
 
     def on_worker_finished(worker)
-      log.info "[           worker           ] finished: #{worker.feature}"
+      log.info "[            worker:#{worker.id}           ] finished: #{worker.feature}"
     end
 
     def on_run_finished(failed)
       log.info "[            run             ] finished"
+    end
+
+    def on_run_interrupted
+      log.info "[            run             ] interrupted"
     end
 
     def log

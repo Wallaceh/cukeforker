@@ -1,6 +1,11 @@
 module CukeForker
   class Worker
-    attr_reader :status, :feature, :pid, :format, :out
+    class << self
+       attr_writer :id
+       def id; @id ||= -1; end
+     end
+
+    attr_reader :status, :feature, :pid, :format, :out, :id
     attr_accessor :vnc
 
     def initialize(feature, format, out, extra_args = [])
@@ -9,6 +14,8 @@ module CukeForker
       @extra_args   = extra_args
       @out          = out
       @status, @vnc = nil
+
+      @id = self.class.id += 1
     end
 
     def finished?

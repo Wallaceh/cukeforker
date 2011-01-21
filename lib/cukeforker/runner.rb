@@ -6,13 +6,14 @@ module CukeForker
   # where 'features' is an Array of file:line
   # and 'opts' is a Hash of options:
   #
-  #   :max        => max          number of workers (default: 2)
+  #   :max        => Fixnum       number of workers (default: 2)
   #   :vnc        => true/false   children are launched with DISPLAY set from a VNC server pool,
   #                               where the size of the pool is equal to :max
   #   :notify     => object       (or array of objects) implementing the AbstractListener API
   #   :out        => path         directory to dump output to (default: current working dir)
   #   :log        => true/false   wether or not to log to stdout (default: true)
-  #   :format     => Symbol       format passed to `cucumber --format` (default: json)
+  #   :format     => Symbol       format passed to `cucumber --format` (default: html)
+  #   :extra_args => Array        extra arguments passed to cucumber
   #
 
   class Runner
