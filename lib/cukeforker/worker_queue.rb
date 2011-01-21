@@ -21,8 +21,11 @@ module CukeForker
     end
 
     def process(poll_interval = nil)
+      @start_time = Time.now
+
       while backed_up?
         fill
+        fire :on_eta, eta
         poll poll_interval while full?
       end
 
@@ -80,6 +83,18 @@ module CukeForker
       @finished << worker
 
       fire :on_worker_finished, worker
+    end
+
+    def eta
+      return Time.now if @finished.empty?
+
+      pending = @pending.size
+      finished = @finished.size
+
+      seconds_per_child = (Time.now - @start_time) / finished
+      eta = Time.now + (seconds_per_child * pending)
+
+      eta
     end
 
     def fire(*args)

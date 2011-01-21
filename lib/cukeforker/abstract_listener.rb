@@ -28,6 +28,9 @@ module CukeForker
     def on_display_stopping(server)
     end
 
+    def on_eta(time, remaining, finished)
+    end
+
     def update(meth, *args)
       __send__(meth, *args)
     end

@@ -72,7 +72,7 @@ module CukeForker
 
     def run
       start
-      loop
+      process
       stop
     rescue Interrupt
       fire :on_run_interrupted
@@ -82,11 +82,10 @@ module CukeForker
     private
 
     def start
-      @start_time = Time.now
       fire :on_run_starting
     end
 
-    def loop
+    def process
       @queue.process 0.2
     end
 

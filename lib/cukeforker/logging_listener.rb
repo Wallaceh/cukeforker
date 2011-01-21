@@ -45,6 +45,11 @@ module CukeForker
       log.info "[    display(#{server.display.to_s.ljust(2)})   ] stopping"
     end
 
+    def on_eta(eta, remaining, finished)
+      counts = "(#{remaining}/#{finished})".ljust(11)
+      log.info "[    eta#{counts}] #{eta.strftime TIME_FORMAT}"
+    end
+
     private
 
     def log
