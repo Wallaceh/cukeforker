@@ -5,7 +5,7 @@ module CukeForker
     TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
     def on_run_starting
-      log.info "[            run             ] starting"
+      log.info "[            run                ] starting"
     end
 
     def on_worker_starting(worker)
@@ -17,11 +17,12 @@ module CukeForker
     end
 
     def on_run_finished(failed)
-      log.info "[            run             ] finished"
+      log.info "[            run                ] finished"
     end
 
     def on_run_interrupted
-      log.info "[            run             ] interrupted"
+      puts "\n"
+      log.info "[            run                ] interrupted"
     end
 
     def log

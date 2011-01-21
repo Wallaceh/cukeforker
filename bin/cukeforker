@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'cukeforker'
+
+split      = ARGV.index("--")
+extra_args = ARGV[0..(split-1)]
+features   = ARGV[(split+1)..-1]
+
+CukeForker::Runner.run(features, :extra_args => extra_args)
