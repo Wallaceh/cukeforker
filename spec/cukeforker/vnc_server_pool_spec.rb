@@ -11,6 +11,14 @@ module CukeForker
       pool.size.should == 3
     end
 
+    it "launches the displays" do
+      servers = [mock("VncServer"), mock("VncServer"), mock("VncServer")]
+      SpecHelper::FakeVnc.should_receive(:new).exactly(3).times.and_return(*servers)
+
+      servers.each { |s| s.should_receive(:start) }
+      pool.launch
+    end
+
     it "can fetch a server from the pool" do
       pool.get.should be_kind_of(SpecHelper::FakeVnc)
       pool.size.should == 2
