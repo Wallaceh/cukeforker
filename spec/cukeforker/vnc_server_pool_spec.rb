@@ -43,8 +43,8 @@ module CukeForker
     it "notifies observers" do
       observer = mock(AbstractListener)
 
-      observer.should_receive(:update).with :on_display_fetched, ":1"
-      observer.should_receive(:update).with :on_display_released, ":1"
+      observer.should_receive(:update).with :on_display_fetched, instance_of(SpecHelper::FakeVnc)
+      observer.should_receive(:update).with :on_display_released, instance_of(SpecHelper::FakeVnc)
 
       pool.add_observer observer
       pool.release pool.get
