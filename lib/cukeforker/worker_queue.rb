@@ -2,8 +2,6 @@ module CukeForker
   class WorkerQueue
     include Observable
 
-    attr_reader :finished
-
     def initialize(max)
       @max = max
 
@@ -25,7 +23,7 @@ module CukeForker
 
       while backed_up?
         fill
-        fire :on_eta, eta
+        eta
         poll poll_interval while full?
       end
 
@@ -33,7 +31,10 @@ module CukeForker
     end
 
     def wait_until_finished(poll_interval = nil)
-      poll poll_interval until empty?
+      until empty?
+        poll poll_interval
+        eta
+      end
     end
 
     def fill
@@ -91,16 +92,22 @@ module CukeForker
       pending = @pending.size
       finished = @finished.size
 
-      seconds_per_child = (Time.now - @start_time) / finished
+      seconds_per_child = (Time.now - start_time) / finished
       eta = Time.now + (seconds_per_child * pending)
 
-      eta
+      fire :on_eta, eta, pending + size, finished
     end
 
     def fire(*args)
       changed
       notify_observers(*args)
     end
+
+    def start_time
+      @start_time or raise NotStartedError
+    end
+
+    class NotStartedError < StandardError; end
 
   end # WorkerQueue
 end # CukeForker

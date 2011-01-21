@@ -96,6 +96,7 @@ module CukeForker
     end
 
     it "polls until all workers are finished" do
+      queue.stub :start_time => Time.now
       workers[0..2].each { |w| queue.add w }
 
       workers[0].stub(:start => nil)
