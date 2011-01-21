@@ -11,14 +11,6 @@ module CukeForker
       pool.size.should == 3
     end
 
-    it "launches the displays" do
-      servers = [mock("VncServer"), mock("VncServer"), mock("VncServer")]
-      SpecHelper::FakeVnc.should_receive(:new).exactly(3).times.and_return(*servers)
-
-      servers.each { |s| s.should_receive(:start) }
-      pool.launch
-    end
-
     it "can fetch a server from the pool" do
       pool.get.should be_kind_of(SpecHelper::FakeVnc)
       pool.size.should == 2
@@ -31,6 +23,15 @@ module CukeForker
       pool.release obj
     end
 
+    it "can stop the pool" do
+      mock_server = mock(VncServer)
+
+      pool.stub(:running => [mock_server])
+      mock_server.should_receive(:stop)
+
+      pool.stop
+    end
+
     it "raises a TooManyDisplaysError if the pool is over capacity" do
       lambda { pool.release "foo" }.should raise_error(VncServerPool::TooManyDisplaysError)
     end
@@ -41,13 +42,20 @@ module CukeForker
     end
 
     it "notifies observers" do
+      server   = mock(VncServer, :start => nil, :stop => nil)
       observer = mock(AbstractListener)
 
-      observer.should_receive(:update).with :on_display_fetched, instance_of(SpecHelper::FakeVnc)
-      observer.should_receive(:update).with :on_display_released, instance_of(SpecHelper::FakeVnc)
+      SpecHelper::FakeVnc.stub :new => server
+
+      observer.should_receive(:update).with :on_display_fetched , server
+      observer.should_receive(:update).with :on_display_released, server
+      observer.should_receive(:update).with :on_display_starting, server
+      observer.should_receive(:update).with :on_display_stopping , server
 
       pool.add_observer observer
+
       pool.release pool.get
+      pool.stop
     end
 
   end # VncServerPool

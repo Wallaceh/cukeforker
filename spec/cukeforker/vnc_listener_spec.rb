@@ -22,5 +22,11 @@ module CukeForker
       listener.on_worker_finished worker
     end
 
+    it "stops the pool when the run finishes" do
+      pool.should_receive(:stop)
+
+      listener.on_run_finished(true)
+    end
+
   end # VncListenerServer
 end # CukeForker

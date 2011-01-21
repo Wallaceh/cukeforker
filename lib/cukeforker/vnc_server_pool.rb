@@ -5,12 +5,14 @@ module CukeForker
     def initialize(capacity, klass = VncServer)
       @capacity = capacity
       @servers  = Array.new(capacity) { klass.new }
+      @running  = []
     end
 
-    # or do this on demand?
-    def launch
-      # TODO: logging
-      @servers.each { |s| s.start }
+    def stop
+      running.each do |s|
+        fire :on_display_stopping, s
+        s.stop
+      end
     end
 
     def size
@@ -20,7 +22,7 @@ module CukeForker
     def get
       raise OutOfDisplaysError if @servers.empty?
 
-      server = @servers.shift
+      server = next_server
       fire :on_display_fetched, server
 
       server
@@ -38,6 +40,22 @@ module CukeForker
     def fire(*args)
       changed
       notify_observers(*args)
+    end
+
+    def running
+      @running
+    end
+
+    def next_server
+      server = @servers.shift
+
+      if server.display.nil?
+        fire :on_display_starting, server
+        server.start
+        @running << server
+      end
+
+      server
     end
 
     class TooManyDisplaysError < StandardError

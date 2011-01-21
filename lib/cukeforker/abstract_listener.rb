@@ -16,10 +16,16 @@ module CukeForker
     def on_run_finished(failed)
     end
 
-    def on_display_fetched(id)
+    def on_display_fetched(server)
     end
 
-    def on_display_released(id)
+    def on_display_released(server)
+    end
+
+    def on_display_starting(server)
+    end
+
+    def on_display_stopped(server)
     end
 
     def update(meth, *args)

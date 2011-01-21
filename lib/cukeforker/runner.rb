@@ -92,6 +92,7 @@ module CukeForker
 
     def stop
       @queue.wait_until_finished 0.5
+    ensure # catch potential second Interrupt
       fire :on_run_finished, @queue.has_failures?
     end
 

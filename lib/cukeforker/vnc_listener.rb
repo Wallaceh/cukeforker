@@ -13,5 +13,9 @@ module CukeForker
       worker.vnc = nil
     end
 
+    def on_run_finished(failed)
+      @pool.stop
+    end
+
   end # VncListener
 end # CukeForker
