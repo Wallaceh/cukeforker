@@ -25,7 +25,7 @@ module CukeForker
     def on_display_starting(server)
     end
 
-    def on_display_stopped(server)
+    def on_display_stopping(server)
     end
 
     def update(meth, *args)
