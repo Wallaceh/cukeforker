@@ -60,17 +60,17 @@ module CukeForker
       worker.start
     end
 
-    it "considers the child as failed if status wasn't collected" do
+    it "considers itself failed if status wasn't collected" do
       worker.stub :status => nil
       worker.should be_failed
     end
 
-    it "considers the child failed if the exit code was 1" do
+    it "considers itself failed if the exit code was 1" do
       worker.stub :status => mock(:exitstatus => 1)
       worker.should be_failed
     end
 
-    it "considers the child successful if the exit code was 0" do
+    it "considers itself failed  if the exit code was 0" do
       worker.stub :status => mock(:exitstatus => 0)
       worker.should_not be_failed
     end

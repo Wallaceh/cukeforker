@@ -20,6 +20,19 @@ module CukeForker
       @pending << worker
     end
 
+    def process(poll_interval = nil)
+      while backed_up?
+        fill
+        poll poll_interval while full?
+      end
+
+      # yay, no more pending workers
+    end
+
+    def wait_until_finished(poll_interval = nil)
+      poll poll_interval until empty?
+    end
+
     def fill
       while backed_up? and not full?
         worker = @pending.shift
@@ -49,15 +62,14 @@ module CukeForker
       @running.empty?
     end
 
-    private
-
-    def finished_workers
-
+    def has_failures?
+      @finished.any? { |w| w.failed? }
     end
 
+    private
+
     def start(worker)
-      changed
-      notify_observers :on_worker_starting, worker
+      fire :on_worker_starting, worker
 
       worker.start
       @running << worker
@@ -67,8 +79,12 @@ module CukeForker
       @running.delete worker
       @finished << worker
 
+      fire :on_worker_finished, worker
+    end
+
+    def fire(*args)
       changed
-      notify_observers :on_worker_finished, worker
+      notify_observers(*args)
     end
 
   end # WorkerQueue

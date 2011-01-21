@@ -10,6 +10,9 @@ module CukeForker
     def on_worker_finished(worker)
     end
 
+    def on_run_interrupted
+    end
+
     def on_run_finished(failed)
     end
 

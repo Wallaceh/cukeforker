@@ -27,11 +27,11 @@ module CukeForker
       :format => :html
     }
 
-    def self.run(*args)
-      new(*args).run
+    def self.run(features, opts = {})
+      create(features, opts).run
     end
 
-    def initialize(features, opts = {})
+    def self.create(features, opts = {})
       opts = DEFAULT_OPTIONS.dup.merge(opts)
 
       max        = opts[:max]
@@ -48,22 +48,31 @@ module CukeForker
         listeners << VncListener.new(VncServerPool.new(max))
       end
 
-      @queue = WorkerQueue.new max
+      queue = WorkerQueue.new max
+      features.each do |feature|
+        queue.add Worker.new(feature, format, out, extra_args)
+      end
+
+      runner = Runner.new queue
 
       listeners.each { |listener|
-        @queue.add_observer listener
-        add_observer listener
+        queue.add_observer listener
+        runner.add_observer listener
       }
 
-      features.each do |feature|
-        @queue.add Worker.new(feature, format, out, extra_args)
-      end
+      runner
+    end
+
+    def initialize(queue)
+      @queue = queue
     end
 
     def run
       start
       loop
-    ensure # also catches Interrupt
+      stop
+    rescue Interrupt
+      fire :on_run_interrupted
       stop
     end
 
@@ -71,29 +80,22 @@ module CukeForker
 
     def start
       @start_time = Time.now
-
-      changed
-      notify_observers :on_run_starting
+      fire :on_run_starting
     end
 
     def loop
-      # TODO: move to WorkerQueue
-      while @queue.backed_up?
-        @queue.fill
-        @queue.poll(0.2) while @queue.full?
-      end
-
-      # aight, no more features pending!
+      @queue.process 0.2
     end
 
     def stop
-      # wait for the last batch to finish
-      @queue.poll(0.2) until @queue.empty?
+      @queue.wait_until_finished
+      fire :on_run_finished, @queue.has_failures?
+    end
 
-      failed = @queue.finished.any? { |w| w.failed? }
-
+    def fire(*args)
+      p :fire => args
       changed
-      notify_observers :on_run_finished, failed
+      notify_observers(*args)
     end
 
   end # Runner

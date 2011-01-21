@@ -7,16 +7,14 @@ module CukeForker
 
     it "adds an item to the queue" do
       queue.should_not be_backed_up
-      queue.add mock(Worker)
+      queue.add workers.first
       queue.should be_backed_up
     end
 
     it "starts up to the max number of workers" do
       queue.should_not be_full
 
-      workers.each do |w|
-        queue.add w
-      end
+      workers.each { |w| queue.add w }
 
       workers[0].should_receive(:start)
       workers[1].should_receive(:start)
@@ -55,9 +53,7 @@ module CukeForker
       listener = AbstractListener.new
       queue.add_observer listener
 
-      workers.each do |w|
-        queue.add w
-      end
+      workers.each { |w| queue.add w }
 
       workers[0].stub(:start => nil, :finished? => true)
       workers[1].stub(:start => nil, :finished? => true)
@@ -70,5 +66,32 @@ module CukeForker
       queue.poll
     end
 
+    it "knows if any of the workers failed" do
+      workers.each { |w| queue.add w }
+
+      workers[0].stub(:start => nil, :finished? => true, :failed? => true)
+      workers[1].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[2].stub(:start => nil, :finished? => true, :failed? => false)
+
+      queue.fill
+      queue.poll
+
+      queue.should have_failures
+    end
+
+    it "processes the queue until no longer backed up" do
+      workers.each { |w| queue.add w }
+
+      workers[0].stub(:start => nil, :finished? => true, :failed? => true)
+      workers[1].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[2].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[3].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[4].stub(:start => nil, :finished? => true, :failed? => false)
+
+      queue.process
+
+      queue.should_not be_backed_up
+      queue.should_not be_full
+    end
   end # WorkerQueue
 end # CukeForker
