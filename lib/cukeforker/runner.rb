@@ -44,8 +44,11 @@ module CukeForker
         listeners << LoggingListener.new
       end
 
+      if opts[:vnc]
+        listeners << VncListener.new(VncServerPool.new(max))
+      end
+
       @queue = WorkerQueue.new max
-      @vncs = DisplayPool.new max if opts[:vnc]
 
       listeners.each { |listener|
         @queue.add_observer listener

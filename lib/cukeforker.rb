@@ -10,7 +10,8 @@ require "observer"
 module CukeForker
 end
 
-require 'cukeforker/display_pool'
+require 'cukeforker/vnc_server_pool'
+require 'cukeforker/vnc_server'
 require 'cukeforker/abstract_listener'
 require 'cukeforker/logging_listener'
 require 'cukeforker/worker'

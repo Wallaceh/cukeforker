@@ -4,6 +4,10 @@ module CukeForker
   describe Worker do
     let(:worker) { Worker.new("some/feature", :json, "some/path", %w[--extra args]) }
 
+    before {
+      FileUtils.stub :mkdir_p
+    }
+
     it "creates an argument string based on the given parameters" do
       worker.args.should == %w{--format json --out some/path/some_feature.json --extra args some/feature }
     end
@@ -21,8 +25,6 @@ module CukeForker
     end
 
     it "runs a passing cuke and exits with 0" do
-      FileUtils.stub(:mkdir_p)
-
       Process.should_receive(:fork).and_yield.and_return(1234)
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
@@ -34,14 +36,26 @@ module CukeForker
     end
 
     it "runs a failing cuke and exits with 1" do
-      FileUtils.stub(:mkdir_p)
-
       Process.should_receive(:fork).and_yield.and_return(1234)
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
 
       Cucumber::Cli::Main.should_receive(:execute).and_return(true)
       worker.should_receive(:exit).with(1)
+
+      worker.start
+    end
+
+    it "sets DISPLAY if a VNC server is set" do
+      worker.vnc = mock(VncServer, :display => ":5")
+
+      Process.should_receive(:fork).and_yield.and_return(1234)
+      $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
+      $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
+      Cucumber::Cli::Main.should_receive(:execute).and_return(false)
+      worker.should_receive(:exit).with(0)
+
+      ENV.should_receive(:[]=).with("DISPLAY", ":5")
 
       worker.start
     end

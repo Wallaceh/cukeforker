@@ -1,9 +1,14 @@
 module CukeForker
-
-  class DisplayPool
+  class VncServerPool
     def initialize(capacity, klass = VncServer)
       @capacity = capacity
       @servers  = Array.new(capacity) { klass.new }
+    end
+
+    # or do this on demand?
+    def launch
+      # TODO: logging
+      @servers.each { |s| s.start }
     end
 
     def size

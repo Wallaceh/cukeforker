@@ -1,13 +1,13 @@
 require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
-  describe DisplayPool do
-    let(:pool)  { DisplayPool.new(3, SpecHelper::FakeVnc) }
+  describe VncServerPool do
+    let(:pool)  { VncServerPool.new(3, SpecHelper::FakeVnc) }
 
     it "creates 3 instances of the given display class" do
       SpecHelper::FakeVnc.should_receive(:new).exactly(3).times
 
-      pool = DisplayPool.new(3, SpecHelper::FakeVnc)
+      pool = VncServerPool.new(3, SpecHelper::FakeVnc)
       pool.size.should == 3
     end
 
@@ -24,12 +24,12 @@ module CukeForker
     end
 
     it "raises a TooManyDisplaysError if the pool is over capacity" do
-      lambda { pool.release "foo" }.should raise_error(DisplayPool::TooManyDisplaysError)
+      lambda { pool.release "foo" }.should raise_error(VncServerPool::TooManyDisplaysError)
     end
 
     it "raises a OutOfDisplaysError if the pool is empty" do
       3.times { pool.get }
-      lambda { pool.get }.should raise_error(DisplayPool::OutOfDisplaysError)
+      lambda { pool.get }.should raise_error(VncServerPool::OutOfDisplaysError)
     end
 
   end # DisplayPool

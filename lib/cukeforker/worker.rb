@@ -1,13 +1,14 @@
 module CukeForker
   class Worker
     attr_reader :status, :feature, :pid, :format, :out
+    attr_accessor :vnc
 
     def initialize(feature, format, out, extra_args = [])
-      @feature    = feature
-      @format     = format
-      @extra_args = extra_args
-      @out        = out
-      @status     = nil
+      @feature      = feature
+      @format       = format
+      @extra_args   = extra_args
+      @out          = out
+      @status, @vnc = nil
     end
 
     def finished?
@@ -39,6 +40,7 @@ module CukeForker
         #{feature}
         #{status.inspect}
         #{out}
+        #{vnc && vnc.display}
        ]"
     end
 
@@ -61,6 +63,10 @@ module CukeForker
 
       $stdout.reopen stdout
       $stderr.reopen stderr
+
+      if @vnc
+        ENV['DISPLAY'] = @vnc.display
+      end
 
       failed = Cucumber::Cli::Main.execute args
       exit failed ? 1 : 0

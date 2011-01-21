@@ -4,6 +4,9 @@ require 'cukeforker'
 module CukeForker
   module SpecHelper
     class FakeVnc
+      def start
+        # noop
+      end
     end
   end
 end
