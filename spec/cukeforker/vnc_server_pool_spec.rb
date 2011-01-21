@@ -40,5 +40,5 @@ module CukeForker
       lambda { pool.get }.should raise_error(VncServerPool::OutOfDisplaysError)
     end
 
-  end # DisplayPool
+  end # VncServerPool
 end # CukeForker

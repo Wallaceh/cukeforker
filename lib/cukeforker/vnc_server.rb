@@ -23,8 +23,8 @@ module CukeForker
     end
 
     def start
-      if @display
-        server @display
+      if display
+        server display
       else
         output = server
         @display = output[/desktop is #{host}(\S+)/, 1]
@@ -32,19 +32,24 @@ module CukeForker
     end
 
     def stop
-      server "-kill", @display.to_s
+      server "-kill", display.to_s
     end
 
     private
 
     def server(*args)
-      out = `tightvncserver #{args.join ' '} 2>&1`
+      cmd = ['tightvncserver', args, '2>&1'].flatten.compact
+      out = `#{cmd.join ' '}`
 
-      unless $?.success?
+      unless last_status.success?
         raise Error, "could not run tightvncserver: #{out.inspect}"
       end
 
       out
+    end
+
+    def last_status
+      $?
     end
 
     def host
