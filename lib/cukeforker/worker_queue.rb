@@ -25,9 +25,13 @@ module CukeForker
       end
     end
 
-    def poll
-      finished_workers.each do |w|
-        finish w
+    def poll(seconds = nil)
+      finished = @running.select { |w| w.finished? }
+
+      if finished.empty?
+        sleep seconds if seconds
+      else
+        finished.each { |w| finish w }
       end
     end
 
@@ -39,15 +43,19 @@ module CukeForker
       size == @max
     end
 
+    def empty?
+      @running.empty?
+    end
+
     private
 
     def finished_workers
-      @running.select { |w| w.finished? }
+
     end
 
     def start(worker)
       changed
-      notify_observers :on_worker_started, worker
+      notify_observers :on_worker_starting, worker
 
       worker.start
       @running << worker

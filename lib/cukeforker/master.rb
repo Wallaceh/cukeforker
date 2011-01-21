@@ -46,12 +46,6 @@ module CukeForker
 
     private
 
-    def assert_unix
-      unless RUBY_PLATFORM =~ /darwin|linux/
-        raise "CukeForker only supported on *nix/MRI"
-      end
-    end
-
     def shutdown
       CukeForker.shutting_down!
       log.warn "shutting down!"

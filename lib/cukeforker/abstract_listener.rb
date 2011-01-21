@@ -1,11 +1,11 @@
 module CukeForker
   class AbstractListener
 
-    def on_run_started
+    def on_run_starting
 
     end
 
-    def on_worker_started(worker)
+    def on_worker_starting(worker)
 
     end
 
