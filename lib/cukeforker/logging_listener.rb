@@ -26,23 +26,23 @@ module CukeForker
 
     def on_run_interrupted
       puts "\n"
-      log.info "[    run           ] interrupted"
+      log.info "[    run           ] interrupted - please wait"
     end
 
     def on_display_fetched(server)
-      log.info "[    display(#{server.display})   ] fetched"
+      log.info "[    display(#{server.display.to_s.ljust(2)})   ] fetched"
     end
 
     def on_display_released(server)
-      log.info "[    display(#{server.display})   ] released"
+      log.info "[    display(#{server.display.to_s.ljust(2)})   ] released"
     end
 
     def on_display_starting(server)
-      log.info "[    display(#{server.display})   ] starting"
+      log.info "[    display(#{server.display.to_s.ljust(2)})   ] starting"
     end
 
-    def on_display_stopped(server)
-      log.info "[    display(#{server.display})   ] stopping"
+    def on_display_stopping(server)
+      log.info "[    display(#{server.display.to_s.ljust(2)})   ] stopping"
     end
 
     private

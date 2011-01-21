@@ -9,7 +9,8 @@ module CukeForker
       Time.stub(:now => Time.now)
 
       mock_worker = mock(Worker,     :id => "1", :feature => "foo/bar")
-      mock_display = mock(VncServer, :display => ":5")
+      mock_display = mock(VncServer)
+      mock_display.stub(:display).and_return(nil, ":5")
 
       listener.on_run_starting
       listener.on_display_starting mock_display
@@ -19,18 +20,18 @@ module CukeForker
       listener.on_display_released mock_display
       listener.on_run_interrupted
       listener.on_run_finished false
-      listener.on_display_stopped mock_display
+      listener.on_display_stopping mock_display
 
       timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S##{Process.pid}")
 
       stdout.string.should == <<-OUTPUT
 I, [#{timestamp}]  INFO -- : [    run           ] starting
-I, [#{timestamp}]  INFO -- : [    display(:5)   ] starting
+I, [#{timestamp}]  INFO -- : [    display(  )   ] starting
 I, [#{timestamp}]  INFO -- : [    display(:5)   ] fetched
 I, [#{timestamp}]  INFO -- : [    worker(1)     ] starting: foo/bar
 I, [#{timestamp}]  INFO -- : [    worker(1)     ] finished: foo/bar
 I, [#{timestamp}]  INFO -- : [    display(:5)   ] released
-I, [#{timestamp}]  INFO -- : [    run           ] interrupted
+I, [#{timestamp}]  INFO -- : [    run           ] interrupted - please wait
 I, [#{timestamp}]  INFO -- : [    run           ] finished, passed
 I, [#{timestamp}]  INFO -- : [    display(:5)   ] stopping
       OUTPUT
