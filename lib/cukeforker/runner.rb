@@ -89,7 +89,7 @@ module CukeForker
     end
 
     def stop
-      @queue.wait_until_finished
+      @queue.wait_until_finished 0.5
       fire :on_run_finished, @queue.has_failures?
     end
 

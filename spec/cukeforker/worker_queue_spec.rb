@@ -13,6 +13,7 @@ module CukeForker
 
     it "starts up to the max number of workers" do
       queue.should_not be_full
+      queue.should be_empty
 
       workers.each { |w| queue.add w }
 
@@ -92,6 +93,24 @@ module CukeForker
 
       queue.should_not be_backed_up
       queue.should_not be_full
+    end
+
+    it "polls until all workers are finished" do
+      workers[0..2].each { |w| queue.add w }
+
+      workers[0].stub(:start => nil)
+      workers[1].stub(:start => nil)
+      workers[2].stub(:start => nil)
+
+      workers[0].should_receive(:finished?).twice.and_return false, true
+      workers[1].should_receive(:finished?).twice.and_return false, true
+      workers[2].should_receive(:finished?).twice.and_return false, true
+
+      queue.fill
+      queue.should_not be_backed_up
+      queue.should be_full
+
+      queue.wait_until_finished
     end
   end # WorkerQueue
 end # CukeForker

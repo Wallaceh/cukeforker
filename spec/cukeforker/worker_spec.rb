@@ -24,6 +24,10 @@ module CukeForker
       worker.stderr.should == "some/path/some_feature.stderr"
     end
 
+    it "has a text representation" do
+      worker.text.should include("some/feature")
+    end
+
     it "runs a passing cuke and exits with 0" do
       Process.should_receive(:fork).and_yield.and_return(1234)
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
