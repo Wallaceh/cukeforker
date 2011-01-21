@@ -35,6 +35,14 @@ module CukeForker
           :out    => out
         ).should be_kind_of(Runner)
       end
+
+      it "creates and runs a new runner" do
+        r = mock(Runner)
+        Runner.should_receive(:create).with(%w[a b], {}).and_return(r)
+        r.should_receive(:run)
+
+        Runner.run(%w[a b])
+      end
     end
 
     context "running" do
