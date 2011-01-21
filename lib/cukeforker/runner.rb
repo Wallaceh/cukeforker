@@ -12,6 +12,7 @@ module CukeForker
   #   :notify     => object       (or array of objects) implementing the AbstractListener API
   #   :out        => path         directory to dump output to (default: current working dir)
   #   :log        => true/false   wether or not to log to stdout (default: true)
+  #   :format     => Symbol       format passed to `cucumber --format` (default: json)
   #
 
   class Runner
@@ -33,19 +34,26 @@ module CukeForker
       opts = DEFAULT_OPTIONS.dup.merge(opts)
 
       max        = opts[:max]
-      listeners = Array(opts[:notify])
+      format     = opts[:format]
+      out        = File.join opts[:out], Process.pid.to_s
+      listeners  = Array(opts[:notify])
+      extra_args = Array(opts[:extra_args])
 
       if opts[:log]
         listeners << LoggingListener.new
       end
 
       @queue = WorkerQueue.new max
-      @vncs = DisplayPool.new max
+      @vncs = DisplayPool.new max if opts[:vnc]
 
       listeners.each { |listener|
         @queue.add_observer listener
         add_observer listener
       }
+
+      features.each do |feature|
+        @queue.add Worker.new(feature, format, out, extra_args)
+      end
     end
 
     def run

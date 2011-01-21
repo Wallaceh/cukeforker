@@ -2,6 +2,8 @@ module CukeForker
   class WorkerQueue
     include Observable
 
+    attr_reader :finished
+
     def initialize(max)
       @max = max
 

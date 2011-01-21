@@ -57,10 +57,10 @@ module CukeForker
     private
 
     def execute_cucumber
+      FileUtils.mkdir_p(out) unless File.exist? out
+
       $stdout.reopen stdout
       $stderr.reopen stderr
-
-      FileUtils.mkdir_p(out) unless File.exist? out
 
       failed = Cucumber::Cli::Main.execute args
       exit failed ? 1 : 0
