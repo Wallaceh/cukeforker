@@ -94,7 +94,6 @@ module CukeForker
     end
 
     def fire(*args)
-      p :fire => args
       changed
       notify_observers(*args)
     end
