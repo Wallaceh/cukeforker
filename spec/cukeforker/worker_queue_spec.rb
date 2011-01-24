@@ -113,5 +113,23 @@ module CukeForker
 
       queue.wait_until_finished
     end
+
+    it "estimates the time left" do
+      now = Time.now
+      seconds_per_child = 60
+
+      queue.stub :start_time => now
+      Time.stub :now => now + seconds_per_child
+
+      workers[0..2].each { |w| queue.add w }
+
+      workers[0].stub(:start => nil, :finished? => true)
+      workers[1].stub(:start => nil, :finished? => false)
+      workers[2].stub(:start => nil, :finished? => false)
+
+      queue.fill
+      queue.poll
+      queue.eta.should == [Time.now + seconds_per_child*2, 2, 1]
+    end
   end # WorkerQueue
 end # CukeForker

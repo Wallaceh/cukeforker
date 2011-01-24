@@ -70,6 +70,28 @@ module CukeForker
       @finished.any? { |w| w.failed? }
     end
 
+    def eta
+      pending  = @pending.size
+      finished = @finished.size
+      running  = @running.size
+
+      remaining = pending + running
+
+      if finished == 0
+        result = [Time.now, remaining, finished]
+        fire :on_eta, *result
+      else
+        seconds_per_child = (Time.now - start_time) / finished.to_f
+        eta = Time.now + (seconds_per_child * remaining)
+
+        result = [eta, remaining, finished]
+
+        fire :on_eta, *result
+      end
+
+      result
+    end
+
     private
 
     def start(worker)
@@ -84,18 +106,6 @@ module CukeForker
       @finished << worker
 
       fire :on_worker_finished, worker
-    end
-
-    def eta
-      return Time.now if @finished.empty?
-
-      pending = @pending.size
-      finished = @finished.size
-
-      seconds_per_child = (Time.now - start_time) / finished
-      eta = Time.now + (seconds_per_child * pending)
-
-      fire :on_eta, eta, pending + size, finished
     end
 
     def fire(*args)
