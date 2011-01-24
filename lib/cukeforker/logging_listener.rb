@@ -13,11 +13,11 @@ module CukeForker
     end
 
     def on_worker_starting(worker)
-      log.info "[    worker(#{worker.id})     ] starting: #{worker.feature}"
+      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] starting: #{worker.feature}"
     end
 
     def on_worker_finished(worker)
-      log.info "[    worker(#{worker.id})     ] finished: #{worker.feature}"
+      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] finished: #{worker.feature}"
     end
 
     def on_run_finished(failed)
@@ -30,24 +30,24 @@ module CukeForker
     end
 
     def on_display_fetched(server)
-      log.info "[    display(#{server.display.to_s.ljust(2)})   ] fetched"
+      log.info "[    display #{server.display.to_s.ljust(2)}    ] fetched"
     end
 
     def on_display_released(server)
-      log.info "[    display(#{server.display.to_s.ljust(2)})   ] released"
+      log.info "[    display #{server.display.to_s.ljust(2)}    ] released"
     end
 
     def on_display_starting(server)
-      log.info "[    display(#{server.display.to_s.ljust(2)})   ] starting"
+      log.info "[    display #{server.display.to_s.ljust(2)}    ] starting"
     end
 
     def on_display_stopping(server)
-      log.info "[    display(#{server.display.to_s.ljust(2)})   ] stopping"
+      log.info "[    display #{server.display.to_s.ljust(2)}    ] stopping"
     end
 
     def on_eta(eta, remaining, finished)
-      counts = "(#{remaining}/#{finished})".ljust(11)
-      log.info "[    eta#{counts}] #{eta.strftime TIME_FORMAT}"
+      counts = "#{remaining}/#{finished}".ljust(6)
+      log.info "[    eta     #{counts}] #{eta.strftime TIME_FORMAT}"
     end
 
     private
