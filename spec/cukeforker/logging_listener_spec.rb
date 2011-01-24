@@ -8,8 +8,8 @@ module CukeForker
     it "logs all events" do
       Time.stub(:now => Time.now)
 
-      mock_worker  = mock(Worker,     :id => "1", :feature => "foo/bar")
-      mock_worker2 = mock(Worker,     :id => "15", :feature => "foo/baz")
+      mock_worker  = mock(Worker,     :id => "1", :feature => "foo/bar", :failed? => false)
+      mock_worker2 = mock(Worker,     :id => "15", :feature => "foo/baz", :failed? => true)
 
       mock_display = mock(VncServer)
       mock_display.stub(:display).and_return(nil, ":5")
@@ -36,8 +36,8 @@ I, [#{timestamp}]  INFO -- : [    display :5    ] fetched
 I, [#{timestamp}]  INFO -- : [    worker  1     ] starting: foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] starting: foo/baz
 I, [#{timestamp}]  INFO -- : [    eta     10/255] #{Time.now.strftime "%Y-%m-%d %H:%M:%S"}
-I, [#{timestamp}]  INFO -- : [    worker  1     ] finished: foo/bar
-I, [#{timestamp}]  INFO -- : [    worker  15    ] finished: foo/baz
+I, [#{timestamp}]  INFO -- : [    worker  1     ] passed  : foo/bar
+I, [#{timestamp}]  INFO -- : [    worker  15    ] failed  : foo/baz
 I, [#{timestamp}]  INFO -- : [    display :5    ] released
 I, [#{timestamp}]  INFO -- : [    run           ] interrupted - please wait
 I, [#{timestamp}]  INFO -- : [    run           ] finished, passed

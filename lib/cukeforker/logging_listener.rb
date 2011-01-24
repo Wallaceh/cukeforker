@@ -17,11 +17,11 @@ module CukeForker
     end
 
     def on_worker_finished(worker)
-      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] finished: #{worker.feature}"
+      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] #{status_string(worker.failed?).ljust(8)}: #{worker.feature}"
     end
 
     def on_run_finished(failed)
-      log.info "[    run           ] finished, #{failed ? 'failed' : 'passed'}"
+      log.info "[    run           ] finished, #{status_string failed}"
     end
 
     def on_run_interrupted
@@ -51,6 +51,10 @@ module CukeForker
     end
 
     private
+
+    def status_string(failed)
+      failed ? 'failed' : 'passed'
+    end
 
     def log
       @log ||= (
