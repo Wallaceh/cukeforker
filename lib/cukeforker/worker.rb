@@ -77,10 +77,6 @@ module CukeForker
       $stdout.reopen stdout
       $stderr.reopen stderr
 
-      if @vnc
-        ENV['DISPLAY'] = @vnc.display
-      end
-
       failed = Cucumber::Cli::Main.execute args
       exit failed ? 1 : 0
     end
