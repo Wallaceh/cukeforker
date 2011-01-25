@@ -15,7 +15,7 @@ module CukeForker
     end
 
     it "releases the display and removes it from the worker" do
-      worker.should_receive(:vnc).and_return server
+      worker.data.should_receive(:vnc).and_return server
       pool.should_receive(:release).with server
       worker.data.should_receive(:vnc=).with(nil)
 

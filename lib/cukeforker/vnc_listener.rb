@@ -9,7 +9,7 @@ module CukeForker
     end
 
     def on_worker_finished(worker)
-      @pool.release worker.vnc
+      @pool.release worker.data.vnc
       worker.data.vnc = nil
     end
 
