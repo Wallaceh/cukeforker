@@ -12,7 +12,7 @@ module CukeForker
       mock_worker2 = mock(Worker,     :id => "15", :feature => "foo/baz", :failed? => true)
 
       mock_display = mock(VncServer)
-      mock_display.stub(:display).and_return(nil, ":5")
+      mock_display.stub(:display).and_return(nil, ":5", ":15")
 
       listener.on_run_starting
       listener.on_display_starting mock_display
@@ -38,10 +38,10 @@ I, [#{timestamp}]  INFO -- : [    worker  15    ] starting: foo/baz
 I, [#{timestamp}]  INFO -- : [    eta     10/255] #{Time.now.strftime "%Y-%m-%d %H:%M:%S"}
 I, [#{timestamp}]  INFO -- : [    worker  1     ] passed  : foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] failed  : foo/baz
-I, [#{timestamp}]  INFO -- : [    display :5    ] released
+I, [#{timestamp}]  INFO -- : [    display :15   ] released
 I, [#{timestamp}]  INFO -- : [    run           ] interrupted - please wait
 I, [#{timestamp}]  INFO -- : [    run           ] finished, passed
-I, [#{timestamp}]  INFO -- : [    display :5    ] stopping
+I, [#{timestamp}]  INFO -- : [    display :15   ] stopping
       OUTPUT
     end
 

@@ -30,19 +30,19 @@ module CukeForker
     end
 
     def on_display_fetched(server)
-      log.info "[    display #{server.display.to_s.ljust(2)}    ] fetched"
+      log.info "[    display #{server.display.to_s.ljust(3)}   ] fetched"
     end
 
     def on_display_released(server)
-      log.info "[    display #{server.display.to_s.ljust(2)}    ] released"
+      log.info "[    display #{server.display.to_s.ljust(3)}   ] released"
     end
 
     def on_display_starting(server)
-      log.info "[    display #{server.display.to_s.ljust(2)}    ] starting"
+      log.info "[    display #{server.display.to_s.ljust(3)}   ] starting"
     end
 
     def on_display_stopping(server)
-      log.info "[    display #{server.display.to_s.ljust(2)}    ] stopping"
+      log.info "[    display #{server.display.to_s.ljust(3)}   ] stopping"
     end
 
     def on_eta(eta, remaining, finished)
