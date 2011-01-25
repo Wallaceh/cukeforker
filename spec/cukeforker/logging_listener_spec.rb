@@ -18,7 +18,9 @@ module CukeForker
       listener.on_display_starting mock_display
       listener.on_display_fetched mock_display
       listener.on_worker_starting mock_worker
+      listener.on_worker_forked mock_worker
       listener.on_worker_starting mock_worker2
+      listener.on_worker_forked mock_worker2
       listener.on_eta Time.now, 10, 255
       listener.on_worker_finished mock_worker
       listener.on_worker_finished mock_worker2
@@ -34,7 +36,9 @@ I, [#{timestamp}]  INFO -- : [    run           ] starting
 I, [#{timestamp}]  INFO -- : [    display       ] starting
 I, [#{timestamp}]  INFO -- : [    display :5    ] fetched
 I, [#{timestamp}]  INFO -- : [    worker  1     ] starting: foo/bar
+I, [#{timestamp}]  INFO -- : [    worker  1     ] forked  : foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] starting: foo/baz
+I, [#{timestamp}]  INFO -- : [    worker  15    ] forked  : foo/baz
 I, [#{timestamp}]  INFO -- : [    eta     10/255] #{Time.now.strftime "%Y-%m-%d %H:%M:%S"}
 I, [#{timestamp}]  INFO -- : [    worker  1     ] passed  : foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] failed  : foo/baz

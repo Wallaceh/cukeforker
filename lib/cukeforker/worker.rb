@@ -7,15 +7,15 @@ module CukeForker
        def id; @id ||= -1; end
      end
 
-    attr_reader :status, :feature, :pid, :format, :out, :id
-    attr_accessor :vnc
+    attr_reader :status, :feature, :pid, :format, :out, :id, :data
 
     def initialize(feature, format, out, extra_args = [])
       @feature      = feature
       @format       = format
       @extra_args   = extra_args
       @out          = out
-      @status, @vnc = nil
+      @status       = nil
+      @data         = OpenStruct.new
 
       @id = self.class.id += 1
     end
@@ -53,7 +53,7 @@ module CukeForker
         #{feature}
         #{status.inspect}
         #{out}
-        #{vnc && vnc.display}
+        #{data}
        ]"
     end
 

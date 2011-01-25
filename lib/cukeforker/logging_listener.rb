@@ -16,6 +16,10 @@ module CukeForker
       log.info "[    worker  #{worker.id.to_s.ljust 3}   ] starting: #{worker.feature}"
     end
 
+    def on_worker_forked(worker)
+      log.info "[    worker  #{worker.id.to_s.ljust 3}   ] forked  : #{worker.feature}"
+    end
+
     def on_worker_finished(worker)
       log.info "[    worker  #{worker.id.to_s.ljust 3}   ] #{status_string(worker.failed?).ljust(8)}: #{worker.feature}"
     end

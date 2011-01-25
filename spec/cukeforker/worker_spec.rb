@@ -50,20 +50,6 @@ module CukeForker
       worker.start
     end
 
-    it "sets DISPLAY if a VNC server is set" do
-      worker.vnc = mock(VncServer, :display => ":5")
-
-      Process.should_receive(:fork).and_yield.and_return(1234)
-      $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
-      $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
-      Cucumber::Cli::Main.should_receive(:execute).and_return(false)
-      worker.should_receive(:exit).with(0)
-
-      ENV.should_receive(:[]=).with("DISPLAY", ":5")
-
-      worker.start
-    end
-
     it "fires an event after forking" do
       mock_listener = mock(AbstractListener)
       mock_listener.should_receive(:update).with(:on_worker_forked, worker)

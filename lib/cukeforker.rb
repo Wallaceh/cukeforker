@@ -6,6 +6,7 @@ end
 require "cucumber/cli/main"
 require "fileutils"
 require "observer"
+require "ostruct"
 
 module CukeForker
 end

@@ -2,14 +2,14 @@ require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
   describe VncListener do
-    let(:server)    { mock(VncServer)       }
-    let(:pool)      { mock(VncServerPool)   }
-    let(:worker)    { mock(Worker)          }
-    let(:listener)  { VncListener.new pool }
+    let(:server)    { mock(VncServer, :display => ":15")    }
+    let(:pool)      { mock(VncServerPool)                   }
+    let(:worker)    { mock(Worker, :data => OpenStruct.new) }
+    let(:listener)  { VncListener.new pool                  }
 
     it "fetches a display from the pool and assings it to the worker" do
       pool.should_receive(:get).and_return(server)
-      worker.should_receive(:vnc=).with server
+      worker.data.should_receive(:vnc=).with server
 
       listener.on_worker_starting worker
     end
@@ -17,7 +17,7 @@ module CukeForker
     it "releases the display and removes it from the worker" do
       worker.should_receive(:vnc).and_return server
       pool.should_receive(:release).with server
-      worker.should_receive(:vnc=).with(nil)
+      worker.data.should_receive(:vnc=).with(nil)
 
       listener.on_worker_finished worker
     end
@@ -26,6 +26,13 @@ module CukeForker
       pool.should_receive(:stop)
 
       listener.on_run_finished(true)
+    end
+
+    it "sets DISPLAY after the worker is forked" do
+      worker.data.should_receive(:vnc).and_return(server)
+      ENV.should_receive(:[]=).with("DISPLAY", ":15")
+
+      listener.on_worker_forked worker
     end
 
   end # VncListenerServer
