@@ -67,6 +67,17 @@ module CukeForker
       queue.poll
     end
 
+    it "adds observers to pending workers" do
+      listener = AbstractListener.new
+
+      workers.each { |w|
+        w.should_receive(:add_observer).with(listener)
+        queue.add w
+      }
+
+      queue.add_observer listener
+    end
+
     it "knows if any of the workers failed" do
       workers.each { |w| queue.add w }
 

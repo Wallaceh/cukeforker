@@ -64,6 +64,21 @@ module CukeForker
       worker.start
     end
 
+    it "fires an event after forking" do
+      mock_listener = mock(AbstractListener)
+      mock_listener.should_receive(:update).with(:on_worker_forked, worker)
+
+      worker.add_observer mock_listener
+
+      Process.should_receive(:fork).and_yield.and_return(1234)
+      $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
+      $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
+      Cucumber::Cli::Main.should_receive(:execute).and_return(false)
+      worker.should_receive(:exit).with(0)
+
+      worker.start
+    end
+
     it "considers itself failed if status wasn't collected" do
       worker.stub :status => nil
       worker.should be_failed

@@ -1,5 +1,7 @@
 module CukeForker
   class Worker
+    include Observable
+
     class << self
        attr_writer :id
        def id; @id ||= -1; end
@@ -30,7 +32,11 @@ module CukeForker
     end
 
     def start
-      @pid = Process.fork { execute_cucumber }
+      @pid = Process.fork {
+        changed
+        notify_observers :on_worker_forked, self
+        execute_cucumber
+      }
     end
 
     def args

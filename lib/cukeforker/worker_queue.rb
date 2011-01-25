@@ -92,6 +92,11 @@ module CukeForker
       result
     end
 
+    def add_observer(observer)
+      @pending.each { |e| e.add_observer observer }
+      super
+    end
+
     private
 
     def start(worker)
