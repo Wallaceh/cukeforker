@@ -77,6 +77,10 @@ module CukeForker
     rescue Interrupt
       fire :on_run_interrupted
       stop
+    rescue StandardError
+      fire :on_run_interrupted
+      stop
+      raise
     end
 
     private
