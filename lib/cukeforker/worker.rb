@@ -69,6 +69,10 @@ module CukeForker
       File.join out, "#{basename}.stderr"
     end
 
+    def basename
+      @basename ||= feature.gsub(/\W/, '_')
+    end
+
     private
 
     def execute_cucumber
@@ -79,10 +83,6 @@ module CukeForker
 
       failed = Cucumber::Cli::Main.execute args
       exit failed ? 1 : 0
-    end
-
-    def basename
-      @basename ||= feature.gsub(/\W/, '_')
     end
 
   end # Worker
