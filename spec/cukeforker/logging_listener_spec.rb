@@ -11,7 +11,7 @@ module CukeForker
       mock_worker  = mock(Worker,     :id => "1", :feature => "foo/bar", :failed? => false)
       mock_worker2 = mock(Worker,     :id => "15", :feature => "foo/baz", :failed? => true)
 
-      mock_display = mock(VncServer)
+      mock_display = mock(VncTools::Server)
       mock_display.stub(:display).and_return(nil, ":5", ":15")
 
       listener.on_run_starting

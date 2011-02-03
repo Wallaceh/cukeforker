@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "cukeforker"
 
   s.add_dependency "cucumber"
+  s.add_dependency "vnctools"
   s.add_development_dependency "rspec"
   s.add_development_dependency "simplecov"
 

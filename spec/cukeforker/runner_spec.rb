@@ -37,8 +37,8 @@ module CukeForker
       end
 
       it "sets up the VNC pool if :vnc => true" do
-        mock_pool = mock(VncServerPool, :add_observer => nil)
-        VncServerPool.should_receive(:new).with(2).and_return mock_pool
+        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
         VncListener.should_receive(:new).with(mock_pool).and_return mock(:update => nil)
 
         Runner.create([], :max => 2, :vnc => true)

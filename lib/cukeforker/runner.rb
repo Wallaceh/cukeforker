@@ -46,7 +46,7 @@ module CukeForker
       end
 
       if opts[:vnc]
-        vnc_pool = VncServerPool.new(max)
+        vnc_pool = VncTools::ServerPool.new(max)
         listeners << VncListener.new(vnc_pool)
       end
 

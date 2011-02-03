@@ -4,6 +4,7 @@ end
 
 
 require "cucumber/cli/main"
+require "vnctools"
 require "fileutils"
 require "observer"
 require "ostruct"
