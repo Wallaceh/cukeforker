@@ -20,8 +20,8 @@ module CukeForker
         Process.stub(:pid => 1234)
 
         WorkerQueue.should_receive(:new).with(max).and_return mock_queue
-        Worker.should_receive(:new).with("a", :json, "/tmp/1234", []).and_return mock_workers[0]
-        Worker.should_receive(:new).with("b", :json, "/tmp/1234", []).and_return mock_workers[1]
+        Worker.should_receive(:new).with("a", :json, "/tmp", []).and_return mock_workers[0]
+        Worker.should_receive(:new).with("b", :json, "/tmp", []).and_return mock_workers[1]
 
         mock_queue.should_receive(:add_observer).once.with listeners.first
         mock_queue.should_receive(:add).with mock_workers[0]

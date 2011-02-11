@@ -39,7 +39,7 @@ module CukeForker
 
       max        = opts[:max]
       format     = opts[:format]
-      out        = File.join opts[:out], Process.pid.to_s
+      out        = File.join opts[:out]
       listeners  = Array(opts[:notify])
       extra_args = Array(opts[:extra_args])
 
