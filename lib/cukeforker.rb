@@ -7,6 +7,7 @@ require "cucumber/cli/main"
 require "vnctools"
 require "fileutils"
 require "observer"
+require "forwardable"
 require "ostruct"
 
 module CukeForker

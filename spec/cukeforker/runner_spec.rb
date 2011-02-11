@@ -78,6 +78,16 @@ module CukeForker
 
         runner.run
       end
+
+      it "fires on_run_interrupted and shuts down if an error occurs" do
+        runner.add_observer listener
+
+        queue.stub(:process).and_raise(StandardError)
+        runner.stub(:stop)
+        listener.should_receive(:update).with(:on_run_interrupted)
+
+        lambda { runner.run }.should raise_error(StandardError)
+      end
     end
 
   end # Runner
