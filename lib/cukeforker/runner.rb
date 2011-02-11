@@ -9,6 +9,8 @@ module CukeForker
   #   :max        => Fixnum       number of workers (default: 2)
   #   :vnc        => true/false   children are launched with DISPLAY set from a VNC server pool,
   #                               where the size of the pool is equal to :max
+  #   :record     => true/false   whether to record a video of failed tests (requires ffmpeg)
+  #                               this will be ignored if if :vnc is not true
   #   :notify     => object       (or array of objects) implementing the AbstractListener API
   #   :out        => path         directory to dump output to (default: current working dir)
   #   :log        => true/false   wether or not to log to stdout (default: true)
@@ -47,7 +49,11 @@ module CukeForker
 
       if opts[:vnc]
         vnc_pool = VncTools::ServerPool.new(max)
-        listeners << VncListener.new(vnc_pool)
+        listener = VncListener.new(vnc_pool)
+
+        if opts[:record]
+          listeners << RecordingVncListener.new(listener)
+        end
       end
 
       queue = WorkerQueue.new max
