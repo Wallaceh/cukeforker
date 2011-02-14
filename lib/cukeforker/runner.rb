@@ -24,7 +24,8 @@ module CukeForker
     DEFAULT_OPTIONS = {
       :max    => 2,
       :vnc    => false,
-      :notify => [],
+      :record => false,
+      :notify => nil,
       :out    => Dir.pwd,
       :log    => true,
       :format => :html
