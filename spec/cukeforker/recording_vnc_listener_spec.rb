@@ -75,5 +75,12 @@ module CukeForker
       listener.on_run_interrupted
     end
 
+    it "passes along options to each recorder" do
+      listener = RecordingVncListener.new vnc_listener, :codec => "flv"
+      VncTools::Recorder.should_receive(:new).with(":2", "./foo.flv", :codec => "flv").and_return(recorder)
+
+      listener.on_worker_starting worker
+    end
+
   end # RecordingVncListener
 end # CukeForker

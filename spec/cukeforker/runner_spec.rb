@@ -55,6 +55,17 @@ module CukeForker
         Runner.create([], :max => 2, :vnc => true, :record => true)
       end
 
+      it "sets up VNC recording if :record => Hash" do
+        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
+
+        mock_vnc_listener = mock(:update => nil)
+        VncListener.should_receive(:new).with(mock_pool).and_return(mock_vnc_listener)
+        RecordingVncListener.should_receive(:new).with(mock_vnc_listener, :codec => "flv").and_return(mock(:update => nil))
+
+        Runner.create([], :max => 2, :vnc => true, :record => {:codec => "flv"})
+      end
+
       it "creates and runs a new runner" do
         r = mock(Runner)
         Runner.should_receive(:create).with(%w[a b], {}).and_return(r)
