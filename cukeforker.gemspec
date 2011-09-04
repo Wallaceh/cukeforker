@@ -16,8 +16,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency "cucumber"
   s.add_dependency "vnctools"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "~> 2.5"
   s.add_development_dependency "simplecov"
+  s.add_development_dependency "rake", "~> 0.9.2"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
