@@ -9,6 +9,7 @@ module CukeForker
       feature_element = mock("Cucumber::Ast::Scenario")
 
       feature.should_receive(:file).twice.and_return('features/test1.feature')
+      feature_element.should_receive(:source_tag_names).twice.and_return('')
       feature_element.should_receive(:feature).twice.and_return(feature)
       feature_element.should_receive(:line).and_return(3)
       feature_element.should_receive(:line).and_return(6)
@@ -34,6 +35,7 @@ module CukeForker
       feature_element = FakeScenarioOutline.new
 
       feature.should_receive(:file).and_return('features/test1.feature')
+      feature_element.should_receive(:source_tag_names).and_return('')
       feature_element.should_receive(:feature).and_return(feature)
 
       logger.visit_feature_element(feature_element)

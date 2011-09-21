@@ -22,3 +22,6 @@ require 'cukeforker/worker_queue'
 require 'cukeforker/runner'
 require 'cukeforker/scenarios'
 require 'cukeforker/scenario_line_logger'
+
+
+require 'cukeforker/formatters/junit_scenario_formatter'
