@@ -1,6 +1,6 @@
-require File.expand_path("../../spec_helper", __FILE__)
+require File.expand_path("../../../spec_helper", __FILE__)
 
-module CukeForker
+module CukeForker::Formatters
   describe ScenarioLineLogger do
     it "returns scenario names and line numbers for a scenario" do
       logger = ScenarioLineLogger.new

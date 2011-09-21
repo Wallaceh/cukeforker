@@ -58,7 +58,7 @@ module CukeForker
 
       Scenarios.stub!(:feature_files).and_return(['features/test1.feature'])
 
-      all_scenarios = Scenarios.all(['@find_me'])
+      all_scenarios = Scenarios.by_args(%W[-t @find_me])
 
       all_scenarios.length.should == 1
       all_scenarios[0].should == "features/test1.feature:3"
