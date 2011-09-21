@@ -8,7 +8,7 @@ module CukeForker
   # where 'args' is a String of cucumber options
   #
   # For example:
-  # CukeForker::Scenarios.by_args('-p my_profile -t @edition')
+  # CukeForker::Scenarios.by_args(%W[-p my_profile -t @edition])
   # will return an array of scenarios and their line numbers that match
   # the tags specified in the cucumber profile 'my_profile' AND have the '@edition' tag
   #
