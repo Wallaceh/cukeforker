@@ -1,12 +1,29 @@
 require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
+
   describe Worker do
     let(:worker) { Worker.new("some/feature", :json, "some/path", %w[--extra args]) }
 
     before {
       FileUtils.stub :mkdir_p
     }
+
+    context "running a scenario on specific line" do
+      let(:worker) { Worker.new("some/feature:51", :json, "some/path", %w[--extra args]) }
+
+      it "has an output file that includes the line number in its name" do
+        worker.output.should == "some/path/some_feature_51.json"
+      end
+
+      it "has a stdout file that includes the line number in its name" do
+        worker.stdout.should == "some/path/some_feature_51.stdout"
+      end
+
+      it "has a stderr file that includes the line number in its name" do
+        worker.stderr.should == "some/path/some_feature_51.stderr"
+      end
+    end
 
     it "creates an argument string based on the given parameters" do
       worker.args.should == %w{--format json --out some/path/some_feature.json --extra args some/feature }
@@ -98,6 +115,5 @@ module CukeForker
       Process.stub(:waitpid2).and_raise(Errno::ESRCH)
       worker.should be_finished
     end
-
   end # Worker
 end # CukeForker
