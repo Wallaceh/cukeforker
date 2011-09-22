@@ -52,7 +52,6 @@ module CukeForker
       if opts[:vnc]
         vnc_pool = VncTools::ServerPool.new(max)
         listener = VncListener.new(vnc_pool)
-        listeners << listener
 
         if record = opts[:record]
           if record.kind_of?(Hash)
@@ -60,6 +59,8 @@ module CukeForker
           else
             listeners << RecordingVncListener.new(listener)
           end
+        else
+          listeners << listener
         end
       end
 
