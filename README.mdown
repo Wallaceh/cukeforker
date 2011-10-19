@@ -7,7 +7,7 @@ Forking cukes and VNC displays.
 
 Usage
 =============
-
+```ruby
     # parallelize per feature
     CukeForker::Runner.run Dir['features/**/*.feature'],
                            :max        => 4                     # number of workers
@@ -19,6 +19,7 @@ Usage
     # parallelize per scenario, with one JUnit XML file per scenario.
     CukeForker::Runner.run CukeForker::Scenarios.tagged(%W[@edition ~@wip])
                            :extra_args => %W[-f CukeForker::Formatters::JunitScenarioFormatter --out results/junit]
+```
 
 Note on Patches/Pull Requests
 =============================
