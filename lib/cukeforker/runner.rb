@@ -6,17 +6,18 @@ module CukeForker
   # where 'features' is an Array of file:line
   # and 'opts' is a Hash of options:
   #
-  #   :max        => Fixnum           number of workers (default: 2)
-  #   :vnc        => true/false       children are launched with DISPLAY set from a VNC server pool,
-  #                                   where the size of the pool is equal to :max
-  #   :record     => true/false,Hash  whether to record a video of failed tests (requires ffmpeg)
-  #                                   this will be ignored if if :vnc is not true. If passed a Hash,
-  #                                   these will be passed as options to RecordingVncListener
-  #   :notify     => object           (or array of objects) implementing the AbstractListener API
-  #   :out        => path             directory to dump output to (default: current working dir)
-  #   :log        => true/false       wether or not to log to stdout (default: true)
-  #   :format     => Symbol           format passed to `cucumber --format` (default: html)
-  #   :extra_args => Array            extra arguments passed to cucumber
+  #   :max        => Fixnum            number of workers (default: 2)
+  #   :vnc        => true/false,Class  children are launched with DISPLAY set from a VNC server pool,
+  #                                    where the size of the pool is equal to :max. If passed a Class instance,
+  #                                    this will be passed as the second argument to VncTools::ServerPool.
+  #   :record     => true/false,Hash   whether to record a video of failed tests (requires ffmpeg)
+  #                                    this will be ignored if if :vnc is not true. If passed a Hash,
+  #                                    this will be passed as options to RecordingVncListener
+  #   :notify     => object            (or array of objects) implementing the AbstractListener API
+  #   :out        => path              directory to dump output to (default: current working dir)
+  #   :log        => true/false        wether or not to log to stdout (default: true)
+  #   :format     => Symbol            format passed to `cucumber --format` (default: html)
+  #   :extra_args => Array             extra arguments passed to cucumber
   #
 
   class Runner
@@ -49,8 +50,13 @@ module CukeForker
         listeners << LoggingListener.new
       end
 
-      if opts[:vnc]
-        vnc_pool = VncTools::ServerPool.new(max)
+      if vnc = opts[:vnc]
+        if vnc.kind_of?(Class)
+          vnc_pool = VncTools::ServerPool.new(max, vnc)
+        else
+          vnc_pool = VncTools::ServerPool.new(max)
+        end
+
         listener = VncListener.new(vnc_pool)
 
         if record = opts[:record]
@@ -71,10 +77,10 @@ module CukeForker
 
       runner = Runner.new queue
 
-      listeners.each { |listener|
-        queue.add_observer listener
-        runner.add_observer listener
-        vnc_pool.add_observer listener if opts[:vnc]
+      listeners.each { |l|
+        queue.add_observer l
+        runner.add_observer l
+        vnc_pool.add_observer l if opts[:vnc]
       }
 
       runner

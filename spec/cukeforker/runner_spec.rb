@@ -44,6 +44,16 @@ module CukeForker
         Runner.create([], :max => 2, :vnc => true)
       end
 
+      it "sets up the VNC pool with a custom server class" do
+        server_class = Class.new
+
+        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        VncTools::ServerPool.should_receive(:new).with(2, server_class).and_return mock_pool
+        VncListener.should_receive(:new).with(mock_pool).and_return mock(:update => nil)
+
+        Runner.create([], :max => 2, :vnc => server_class)
+      end
+
       it "sets up VNC recording if :record => true" do
         mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
         VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
