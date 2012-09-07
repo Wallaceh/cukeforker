@@ -10,7 +10,7 @@ module CukeForker
       end
 
       def visit_feature_element(feature_element)
-        if @tag_expression.eval feature_element.source_tag_names
+        if @tag_expression.eval feature_element.source_tags
           if feature_element.respond_to? :line
             @scenarios <<  "#{feature_element.feature.file}:#{feature_element.line}"
           else
