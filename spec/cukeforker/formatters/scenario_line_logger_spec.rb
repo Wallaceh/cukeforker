@@ -1,4 +1,5 @@
 require File.expand_path("../../../spec_helper", __FILE__)
+require 'cucumber/ast/scenario_outline'
 
 module CukeForker::Formatters
   describe ScenarioLineLogger do
@@ -25,14 +26,10 @@ module CukeForker::Formatters
     it "returns scenario names and line numbers for a scenario outline" do
       logger = ScenarioLineLogger.new
 
-      class FakeScenarioOutline
-        def initialize
-          @line = 4
-        end
-      end
-
       feature = mock("Cucumber::Ast::Feature")
-      feature_element = FakeScenarioOutline.new
+      location = mock("Cucumber::Ast::Location", :line => 4)
+      feature_element = Cucumber::Ast::ScenarioOutline.new(*Array.new(11) {|a| stub(a, :each => true) })
+      feature_element.stub(:location => location)
 
       feature.should_receive(:file).and_return('features/test1.feature')
       feature_element.should_receive(:source_tags).and_return('')
