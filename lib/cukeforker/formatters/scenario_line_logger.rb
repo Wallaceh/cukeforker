@@ -10,12 +10,14 @@ module CukeForker
       end
 
       def visit_feature_element(feature_element)
-        if @tag_expression.eval feature_element.source_tags
-          if feature_element.respond_to? :line
-            @scenarios <<  "#{feature_element.feature.file}:#{feature_element.line}"
-          else
-            @scenarios <<  "#{feature_element.feature.file}:#{feature_element.instance_variable_get(:@line)}"
-          end
+        if @tag_expression.evaluate(feature_element.source_tags)
+          line_number = if feature_element.respond_to?(:line)
+                          feature_element.line
+                        else
+                          feature_element.location.line
+                        end
+
+          @scenarios << [feature_element.feature.file, line_number].join(':')
         end
       end
 
