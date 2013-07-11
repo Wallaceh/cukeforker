@@ -2,7 +2,7 @@ require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
   describe WorkerQueue do
-    let(:workers) { Array.new(5) { |n| mock("Worker-#{n}") } }
+    let(:workers) { Array.new(5) { |n| double("Worker-#{n}") } }
     let(:queue) { WorkerQueue.new(3) }
 
     it "adds an item to the queue" do
@@ -31,7 +31,7 @@ module CukeForker
     it "is unlimited if max workers = 0" do
       unlimited_queue = WorkerQueue.new(0)
 
-      workers.each { |w| queue.add stub.as_null_object }
+      workers.each { |w| queue.add double.as_null_object }
 
       unlimited_queue.fill
       unlimited_queue.should_not be_full
@@ -50,9 +50,9 @@ module CukeForker
 
       queue.fill
 
-      workers[0].stub!(:finished? => true)
-      workers[1].stub!(:finished? => true)
-      workers[2].stub!(:finished? => false)
+      workers[0].stub(:finished? => true)
+      workers[1].stub(:finished? => true)
+      workers[2].stub(:finished? => false)
 
       queue.poll
 

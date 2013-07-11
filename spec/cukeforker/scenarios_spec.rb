@@ -28,10 +28,10 @@ module CukeForker
             | 1       |
         ")
 
-      Cucumber::FeatureFile.stub!(:new).with("features/test1.feature").and_return(feature_1)
-      Cucumber::FeatureFile.stub!(:new).with("features/test2.feature").and_return(feature_2)
+      Cucumber::FeatureFile.stub(:new).with("features/test1.feature").and_return(feature_1)
+      Cucumber::FeatureFile.stub(:new).with("features/test2.feature").and_return(feature_2)
 
-      Scenarios.stub!(:feature_files).and_return(['features/test1.feature', 'features/test2.feature'])
+      Scenarios.stub(:feature_files).and_return(['features/test1.feature', 'features/test2.feature'])
 
       all_scenarios = Scenarios.all
 
@@ -54,9 +54,9 @@ module CukeForker
           Scenario: test scenario 2
             Given nothing else happens")
 
-      Cucumber::FeatureFile.stub!(:new).with("features/test1.feature").and_return(feature_1)
+      Cucumber::FeatureFile.stub(:new).with("features/test1.feature").and_return(feature_1)
 
-      Scenarios.stub!(:feature_files).and_return(['features/test1.feature'])
+      Scenarios.stub(:feature_files).and_return(['features/test1.feature'])
 
       all_scenarios = Scenarios.by_args(%W[-t @find_me])
 

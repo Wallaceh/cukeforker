@@ -68,7 +68,7 @@ module CukeForker
     end
 
     it "fires an event after forking" do
-      mock_listener = mock(AbstractListener)
+      mock_listener = double(AbstractListener)
       mock_listener.should_receive(:update).with(:on_worker_forked, worker)
 
       worker.add_observer mock_listener
@@ -88,12 +88,12 @@ module CukeForker
     end
 
     it "considers itself failed if the exit code was 1" do
-      worker.stub :status => mock(:exitstatus => 1)
+      worker.stub :status => double(:exitstatus => 1)
       worker.should be_failed
     end
 
     it "considers itself failed  if the exit code was 0" do
-      worker.stub :status => mock(:exitstatus => 0)
+      worker.stub :status => double(:exitstatus => 0)
       worker.should_not be_failed
     end
 

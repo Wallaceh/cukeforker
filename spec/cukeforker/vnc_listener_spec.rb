@@ -2,9 +2,9 @@ require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
   describe VncListener do
-    let(:server)    { mock(VncTools::Server, :display => ":15")    }
-    let(:pool)      { mock(VncTools::ServerPool)                   }
-    let(:worker)    { mock(Worker, :data => OpenStruct.new) }
+    let(:server)    { double(VncTools::Server, :display => ":15")    }
+    let(:pool)      { double(VncTools::ServerPool)                   }
+    let(:worker)    { double(Worker, :data => OpenStruct.new) }
     let(:listener)  { VncListener.new pool                  }
 
     it "fetches a display from the pool and assings it to the worker" do

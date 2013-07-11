@@ -6,8 +6,8 @@ module CukeForker::Formatters
     it "returns scenario names and line numbers for a scenario" do
       logger = ScenarioLineLogger.new
 
-      feature = mock("Cucumber::Ast::Feature")
-      feature_element = mock("Cucumber::Ast::Scenario")
+      feature = double("Cucumber::Ast::Feature")
+      feature_element = double("Cucumber::Ast::Scenario")
 
       feature.should_receive(:file).twice.and_return('features/test1.feature')
       feature_element.should_receive(:source_tags).twice.and_return('')
@@ -26,9 +26,9 @@ module CukeForker::Formatters
     it "returns scenario names and line numbers for a scenario outline" do
       logger = ScenarioLineLogger.new
 
-      feature = mock("Cucumber::Ast::Feature")
-      location = mock("Cucumber::Ast::Location", :line => 4)
-      feature_element = Cucumber::Ast::ScenarioOutline.new(*Array.new(11) {|a| stub(a, :each => true) })
+      feature = double("Cucumber::Ast::Feature")
+      location = double("Cucumber::Ast::Location", :line => 4)
+      feature_element = Cucumber::Ast::ScenarioOutline.new(*Array.new(11) {|a| double(a, :each => true) })
       feature_element.stub(:location => location)
 
       feature.should_receive(:file).and_return('features/test1.feature')

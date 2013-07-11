@@ -10,12 +10,12 @@ module CukeForker
         max       = 4
         format    = :json
         out       = "/tmp"
-        listeners = [mock(AbstractListener, :update => nil)]
+        listeners = [double(AbstractListener, :update => nil)]
         log       = false
         features  = %w[a b]
 
-        mock_queue = mock(WorkerQueue)
-        mock_workers = Array.new(2) { |n| mock("Worker-#{n}") }
+        mock_queue = double(WorkerQueue)
+        mock_workers = Array.new(2) { |n| double("Worker-#{n}") }
 
         Process.stub(:pid => 1234)
 
@@ -37,9 +37,9 @@ module CukeForker
       end
 
       it "sets up the VNC pool if :vnc => true" do
-        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        mock_pool = double(VncTools::ServerPool, :add_observer => nil)
         VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
-        VncListener.should_receive(:new).with(mock_pool).and_return mock(:update => nil)
+        VncListener.should_receive(:new).with(mock_pool).and_return double(:update => nil)
 
         Runner.create([], :max => 2, :vnc => true)
       end
@@ -47,37 +47,37 @@ module CukeForker
       it "sets up the VNC pool with a custom server class" do
         server_class = Class.new
 
-        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        mock_pool = double(VncTools::ServerPool, :add_observer => nil)
         VncTools::ServerPool.should_receive(:new).with(2, server_class).and_return mock_pool
-        VncListener.should_receive(:new).with(mock_pool).and_return mock(:update => nil)
+        VncListener.should_receive(:new).with(mock_pool).and_return double(:update => nil)
 
         Runner.create([], :max => 2, :vnc => server_class)
       end
 
       it "sets up VNC recording if :record => true" do
-        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        mock_pool = double(VncTools::ServerPool, :add_observer => nil)
         VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
 
-        mock_vnc_listener = mock(:update => nil)
+        mock_vnc_listener = double(:update => nil)
         VncListener.should_receive(:new).with(mock_pool).and_return(mock_vnc_listener)
-        RecordingVncListener.should_receive(:new).with(mock_vnc_listener).and_return(mock(:update => nil))
+        RecordingVncListener.should_receive(:new).with(mock_vnc_listener).and_return(double(:update => nil))
 
         Runner.create([], :max => 2, :vnc => true, :record => true)
       end
 
       it "sets up VNC recording if :record => Hash" do
-        mock_pool = mock(VncTools::ServerPool, :add_observer => nil)
+        mock_pool = double(VncTools::ServerPool, :add_observer => nil)
         VncTools::ServerPool.should_receive(:new).with(2).and_return mock_pool
 
-        mock_vnc_listener = mock(:update => nil)
+        mock_vnc_listener = double(:update => nil)
         VncListener.should_receive(:new).with(mock_pool).and_return(mock_vnc_listener)
-        RecordingVncListener.should_receive(:new).with(mock_vnc_listener, :codec => "flv").and_return(mock(:update => nil))
+        RecordingVncListener.should_receive(:new).with(mock_vnc_listener, :codec => "flv").and_return(double(:update => nil))
 
         Runner.create([], :max => 2, :vnc => true, :record => {:codec => "flv"})
       end
 
       it "creates and runs a new runner" do
-        r = mock(Runner)
+        r = double(Runner)
         Runner.should_receive(:create).with(%w[a b], {}).and_return(r)
         r.should_receive(:run)
 
@@ -86,8 +86,8 @@ module CukeForker
     end
 
     context "running" do
-      let(:listener) { mock(AbstractListener, :update => nil) }
-      let(:queue)    { mock(Queue, :has_failures? => false) }
+      let(:listener) { double(AbstractListener, :update => nil) }
+      let(:queue)    { double(Queue, :has_failures? => false) }
       let(:runner)   { Runner.new(queue) }
 
       it "processes the queue" do

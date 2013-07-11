@@ -2,10 +2,10 @@ require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
   describe RecordingVncListener do
-    let(:server)       { mock(VncTools::Server, :display => ":2")}
-    let(:vnc_listener) { mock(VncListener).as_null_object  }
-    let(:worker)       { mock(Worker, :data => OpenStruct.new(:vnc => server), :out => ".", :basename => "foo", :failed? => true) }
-    let(:recorder)     { mock(VncTools::Recorder, :start => nil, :stop => nil, :output => "foo.mp4")   }
+    let(:server)       { double(VncTools::Server, :display => ":2")}
+    let(:vnc_listener) { double(VncListener).as_null_object  }
+    let(:worker)       { double(Worker, :data => OpenStruct.new(:vnc => server), :out => ".", :basename => "foo", :failed? => true) }
+    let(:recorder)     { double(VncTools::Recorder, :start => nil, :stop => nil, :output => "foo.mp4")   }
     let(:listener)     { RecordingVncListener.new vnc_listener }
 
     it "forwards messages to the wrapped listener do" do

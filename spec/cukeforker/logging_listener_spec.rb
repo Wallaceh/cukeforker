@@ -8,10 +8,10 @@ module CukeForker
     it "logs all events" do
       Time.stub(:now => Time.now)
 
-      mock_worker  = mock(Worker,     :id => "1", :feature => "foo/bar", :failed? => false)
-      mock_worker2 = mock(Worker,     :id => "15", :feature => "foo/baz", :failed? => true)
+      mock_worker  = double(Worker,     :id => "1", :feature => "foo/bar", :failed? => false)
+      mock_worker2 = double(Worker,     :id => "15", :feature => "foo/baz", :failed? => true)
 
-      mock_display = mock(VncTools::Server)
+      mock_display = double(VncTools::Server)
       mock_display.stub(:display).and_return(nil, ":5", ":15")
 
       listener.on_run_starting
