@@ -28,6 +28,20 @@ module CukeForker
       queue.should be_backed_up
     end
 
+    it "is unlimited if max workers = 0" do
+      unlimited_queue = WorkerQueue.new(0)
+
+      workers.each { |w| queue.add stub.as_null_object }
+
+      unlimited_queue.fill
+      unlimited_queue.should_not be_full
+      unlimited_queue.should_not be_backed_up
+    end
+
+    it "raises if max workers is negative" do
+      expect { WorkerQueue.new(-1) }.to raise_error(ArgumentError)
+    end
+
     it "removes finished workers from the queue" do
       workers.each do |w|
         w.should_receive(:start)

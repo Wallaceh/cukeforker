@@ -5,6 +5,10 @@ module CukeForker
     def initialize(max)
       @max = max
 
+      if @max < 0
+        raise ArgumentError, "max workers cannot be negative, got #{@max.inspect}"
+      end
+
       @pending = []
       @running = []
       @finished = []
@@ -59,7 +63,7 @@ module CukeForker
     end
 
     def full?
-      size == @max
+      @max != 0 && size == @max
     end
 
     def empty?

@@ -6,7 +6,7 @@ module CukeForker
   # where 'features' is an Array of file:line
   # and 'opts' is a Hash of options:
   #
-  #   :max        => Fixnum            number of workers (default: 2)
+  #   :max        => Fixnum            number of workers (default: 2, pass 0 for unlimited)
   #   :vnc        => true/false,Class  children are launched with DISPLAY set from a VNC server pool,
   #                                    where the size of the pool is equal to :max. If passed a Class instance,
   #                                    this will be passed as the second argument to VncTools::ServerPool.
