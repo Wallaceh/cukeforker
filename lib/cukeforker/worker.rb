@@ -82,6 +82,10 @@ module CukeForker
       $stderr.reopen stderr
 
       failed = Cucumber::Cli::Main.execute args
+
+      $stdout.flush
+      $stderr.flush
+
       exit failed ? 1 : 0
     end
 
