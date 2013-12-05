@@ -1,4 +1,5 @@
-unless RUBY_PLATFORM =~ /darwin|linux/
+require 'rbconfig'
+unless RbConfig::CONFIG['host_os'] =~ /darwin|linux/
   raise "CukeForker only supported on *nix/MRI"
 end
 
