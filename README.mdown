@@ -7,6 +7,7 @@ Forking cukes and VNC displays.
 
 Usage
 =============
+
 ```ruby
     # parallelize per feature
     CukeForker::Runner.run Dir['features/**/*.feature'],
@@ -15,7 +16,7 @@ Usage
                            :format     => :html                 # passed to `cucumber --format`,
                            :extra_args => %w[--extra arguments] # passed to cucumber,
                            :vnc        => true                  # manage a pool of VNC displays, assign one per worker.
-                           
+
     # parallelize per scenario, with one JUnit XML file per scenario.
     CukeForker::Runner.run CukeForker::Scenarios.tagged(%W[@edition ~@wip])
                            :extra_args => %W[-f CukeForker::Formatters::JunitScenarioFormatter --out results/junit]
@@ -35,5 +36,5 @@ Note on Patches/Pull Requests
 Copyright
 =========
 
-Copyright (c) 2011-2013 Jari Bakken. See LICENSE for details.
+Copyright (c) 2011-2014 Jari Bakken. See LICENSE for details.
 
