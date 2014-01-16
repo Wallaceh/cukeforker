@@ -3,7 +3,7 @@ require File.expand_path("../../spec_helper", __FILE__)
 module CukeForker
   describe WorkerQueue do
     let(:workers) { Array.new(5) { |n| double("Worker-#{n}") } }
-    let(:queue) { WorkerQueue.new(3) }
+    let(:queue) { WorkerQueue.new(3, 0) }
 
     it "adds an item to the queue" do
       queue.should_not be_backed_up
@@ -29,7 +29,7 @@ module CukeForker
     end
 
     it "is unlimited if max workers = 0" do
-      unlimited_queue = WorkerQueue.new(0)
+      unlimited_queue = WorkerQueue.new(0, 0)
 
       workers.each { |w| queue.add double.as_null_object }
 

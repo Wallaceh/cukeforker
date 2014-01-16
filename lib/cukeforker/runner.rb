@@ -18,6 +18,7 @@ module CukeForker
   #   :log        => true/false        wether or not to log to stdout (default: true)
   #   :format     => Symbol            format passed to `cucumber --format` (default: html)
   #   :extra_args => Array             extra arguments passed to cucumber
+  #   :delay      => Numeric           seconds to sleep between each worker is started (default: 0)
   #
 
   class Runner
@@ -30,7 +31,8 @@ module CukeForker
       :notify => nil,
       :out    => Dir.pwd,
       :log    => true,
-      :format => :html
+      :format => :html,
+      :delay  => 0
     }
 
     def self.run(features, opts = {})
@@ -45,6 +47,7 @@ module CukeForker
       out        = File.join opts[:out]
       listeners  = Array(opts[:notify])
       extra_args = Array(opts[:extra_args])
+      delay      = opts[:delay]
 
       if opts[:log]
         listeners << LoggingListener.new
@@ -70,7 +73,7 @@ module CukeForker
         end
       end
 
-      queue = WorkerQueue.new max
+      queue = WorkerQueue.new max, delay
       features.each do |feature|
         queue.add Worker.new(feature, format, out, extra_args)
       end

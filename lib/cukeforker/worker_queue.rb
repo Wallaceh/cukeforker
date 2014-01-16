@@ -2,11 +2,16 @@ module CukeForker
   class WorkerQueue
     include Observable
 
-    def initialize(max)
+    def initialize(max, delay)
       @max = max
+      @delay = delay
 
       if @max < 0
         raise ArgumentError, "max workers cannot be negative, got #{@max.inspect}"
+      end
+
+      unless @delay.kind_of?(Numeric)
+        raise ArgumentError, "delay must be Numeric, got #{@delay.inspect}:#{@delay.class}"
       end
 
       @pending = []
@@ -108,6 +113,8 @@ module CukeForker
 
       worker.start
       @running << worker
+
+      sleep @delay
     end
 
     def finish(worker)
