@@ -2,9 +2,10 @@ module CukeForker
   class WorkerQueue
     include Observable
 
-    def initialize(max, delay)
+    def initialize(max, delay, fail_fast=false)
       @max = max
       @delay = delay
+      @fail_fast = fail_fast
 
       if @max < 0
         raise ArgumentError, "max workers cannot be negative, got #{@max.inspect}"
@@ -118,9 +119,26 @@ module CukeForker
     end
 
     def finish(worker)
-      @running.delete worker
-      @finished << worker
-
+      if worker.failed? and @fail_fast
+        @pending = [] # Don't run any new tests
+        @running.delete worker
+        @finished << worker
+        # Abort all other running tests
+        @running.each do |w|
+          if w.pid
+            begin
+              Process.kill("INT", w.pid)
+              Process.wait(w.pid)
+            rescue
+              # "ERROR: Could not abort worker #{w.feature}."
+            end
+          end
+        end
+        @running = []
+      else
+        @running.delete worker
+        @finished << worker
+      end
       fire :on_worker_finished, worker
     end
 
