@@ -40,10 +40,14 @@ module CukeForker
     end
 
     def args
-      args = %W[--format #{format} --out #{output}]
+      if format.kind_of?(Array)
+        args = format.map { |f| "--format #{f} --out #{output(f)}" }
+        args = args.join(' ').split(' ')
+      else
+        args = %W[--format #{format} --out #{output}]
+      end
       args += @extra_args
       args << feature
-
       args
     end
 
@@ -57,7 +61,8 @@ module CukeForker
        ]"
     end
 
-    def output
+    def output(format=nil)
+      format = @format if format.nil?
       File.join out, "#{basename}.#{format}"
     end
 
