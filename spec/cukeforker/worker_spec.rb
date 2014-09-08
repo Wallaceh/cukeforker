@@ -25,6 +25,19 @@ module CukeForker
       end
     end
 
+    context "running a scenario with multiple report formats" do
+      formats = [ :json, :junit ]
+      path    = "some/path"
+      let(:worker) { Worker.new("some/feature:51", formats, path) }
+
+      it "has an output file for each format specified" do
+        expected_args = formats.flat_map do |f|
+          %W[--format #{f} --out #{path}/some_feature_51.#{f}]
+        end
+        worker.args.each_cons(expected_args.size).include?(expected_args).should be_true
+      end
+    end
+
     it "creates an argument string based on the given parameters" do
       worker.args.should == %w{--format json --out some/path/some_feature.json --extra args some/feature }
     end

@@ -3,9 +3,9 @@ module CukeForker
     include Observable
 
     class << self
-       attr_writer :id
-       def id; @id ||= -1; end
-     end
+      attr_writer :id
+      def id; @id ||= -1; end
+    end
 
     attr_reader :status, :feature, :pid, :format, :out, :id, :data
 
@@ -40,12 +40,7 @@ module CukeForker
     end
 
     def args
-      if format.kind_of?(Array)
-        args = format.map { |f| "--format #{f} --out #{output(f)}" }
-        args = args.join(' ').split(' ')
-      else
-        args = %W[--format #{format} --out #{output}]
-      end
+      args = Array(format).flat_map { |f| %W[--format #{f} --out #{output(f)}] }
       args += @extra_args
       args << feature
       args
