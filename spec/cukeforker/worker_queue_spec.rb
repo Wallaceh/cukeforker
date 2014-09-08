@@ -3,7 +3,8 @@ require File.expand_path("../../spec_helper", __FILE__)
 module CukeForker
   describe WorkerQueue do
     let(:workers) { Array.new(5) { |n| double("Worker-#{n}") } }
-    let(:queue) { WorkerQueue.new(3, 0) }
+    let(:queue) { WorkerQueue.new(3, 0, false) }
+
 
     it "adds an item to the queue" do
       queue.should_not be_backed_up
@@ -50,9 +51,9 @@ module CukeForker
 
       queue.fill
 
-      workers[0].stub(:finished? => true)
-      workers[1].stub(:finished? => true)
-      workers[2].stub(:finished? => false)
+      workers[0].stub(:finished? => true, :failed? => false)
+      workers[1].stub(:finished? => true, :failed? => false)
+      workers[2].stub(:finished? => false, :failed? => false)
 
       queue.poll
 
@@ -70,9 +71,9 @@ module CukeForker
 
       workers.each { |w| queue.add w }
 
-      workers[0].stub(:start => nil, :finished? => true)
-      workers[1].stub(:start => nil, :finished? => true)
-      workers[2].stub(:start => nil, :finished? => false)
+      workers[0].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[1].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[2].stub(:start => nil, :finished? => false, :failed? => false)
 
       listener.should_receive(:on_worker_starting).exactly(3).times
       queue.fill
@@ -124,9 +125,9 @@ module CukeForker
       queue.stub :start_time => Time.now
       workers[0..2].each { |w| queue.add w }
 
-      workers[0].stub(:start => nil)
-      workers[1].stub(:start => nil)
-      workers[2].stub(:start => nil)
+      workers[0].stub(:start => nil, :failed? => false)
+      workers[1].stub(:start => nil, :failed? => false)
+      workers[2].stub(:start => nil, :failed? => false)
 
       workers[0].should_receive(:finished?).twice.and_return false, true
       workers[1].should_receive(:finished?).twice.and_return false, true
@@ -148,13 +149,43 @@ module CukeForker
 
       workers[0..2].each { |w| queue.add w }
 
-      workers[0].stub(:start => nil, :finished? => true)
-      workers[1].stub(:start => nil, :finished? => false)
-      workers[2].stub(:start => nil, :finished? => false)
+      workers[0].stub(:start => nil, :finished? => true, :failed? => false)
+      workers[1].stub(:start => nil, :finished? => false, :failed? => false)
+      workers[2].stub(:start => nil, :finished? => false, :failed? => false)
 
       queue.fill
       queue.poll
       queue.eta.should == [Time.now + seconds_per_child*2, 2, 1]
     end
-  end # WorkerQueue
+
+    context "with fail fast enabled" do
+      let(:workers) { Array.new(10) { |n| double("Worker-#{n}") } }
+      let(:queue) { WorkerQueue.new(3, 0, true) }
+
+      it "should exit after the first test failure" do
+        queue.should be_empty
+
+        workers.each { |w| queue.add w }
+
+        workers[0].stub(:start => nil, :finished? => true, :failed? => false)
+        workers[1].stub(:start => nil, :finished? => false, :failed? => false, :kill => nil)
+        workers[2].stub(:start => nil, :finished? => false, :failed? => false, :kill => nil)
+        queue.fill
+        queue.poll
+
+        workers[3].stub(:start => nil, :finished? => false, :failed? => true)
+        queue.fill
+        queue.poll
+
+        workers[3].stub(:finished? => true)
+        queue.fill
+        queue.poll
+        queue.instance_variable_get(:@pending).should be_empty
+        queue.instance_variable_get(:@running).should be_empty
+        queue.instance_variable_get(:@finished).should == [ workers[0], workers[3] ]
+        queue.has_failures?.should be_true
+      end
+    end
+
+ end # WorkerQueue
 end # CukeForker

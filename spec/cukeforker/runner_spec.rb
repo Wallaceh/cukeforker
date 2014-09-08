@@ -14,13 +14,14 @@ module CukeForker
         log       = false
         features  = %w[a b]
         delay     = 1
+        fail_fast = false
 
         mock_queue = double(WorkerQueue)
         mock_workers = Array.new(2) { |n| double("Worker-#{n}") }
 
         Process.stub(:pid => 1234)
 
-        WorkerQueue.should_receive(:new).with(max, 1).and_return mock_queue
+        WorkerQueue.should_receive(:new).with(max, 1, fail_fast).and_return mock_queue
         Worker.should_receive(:new).with("a", :json, "/tmp", []).and_return mock_workers[0]
         Worker.should_receive(:new).with("b", :json, "/tmp", []).and_return mock_workers[1]
 
@@ -29,12 +30,13 @@ module CukeForker
         mock_queue.should_receive(:add).with mock_workers[1]
 
         Runner.create(features,
-          :max    => max,
-          :notify => listeners,
-          :format => format,
-          :log    => false,
-          :out    => out,
-          :delay  => 1
+          :max        => max,
+          :notify     => listeners,
+          :format     => format,
+          :log        => false,
+          :out        => out,
+          :delay      => 1,
+          :fail_fast  => fail_fast,
         ).should be_kind_of(Runner)
       end
 

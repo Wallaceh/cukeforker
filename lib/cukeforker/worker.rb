@@ -3,9 +3,9 @@ module CukeForker
     include Observable
 
     class << self
-       attr_writer :id
-       def id; @id ||= -1; end
-     end
+      attr_writer :id
+      def id; @id ||= -1; end
+    end
 
     attr_reader :status, :feature, :pid, :format, :out, :id, :data
 
@@ -71,6 +71,17 @@ module CukeForker
 
     def basename
       @basename ||= feature.gsub(/\W/, '_')
+    end
+
+    def kill
+      if pid
+        begin
+          Process.kill("TERM", pid)
+          Process.wait(pid)
+        rescue
+          # Could not kill worker #{w.feature}
+        end
+      end
     end
 
     private

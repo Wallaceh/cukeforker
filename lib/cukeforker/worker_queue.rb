@@ -119,25 +119,12 @@ module CukeForker
     end
 
     def finish(worker)
+      @running.delete worker
+      @finished << worker
       if worker.failed? and @fail_fast
         @pending = [] # Don't run any new tests
-        @running.delete worker
-        @finished << worker
-        # Abort all other running tests
-        @running.each do |w|
-          if w.pid
-            begin
-              Process.kill("INT", w.pid)
-              Process.wait(w.pid)
-            rescue
-              # "ERROR: Could not abort worker #{w.feature}."
-            end
-          end
-        end
+        @running.each { |w| w.kill } # Abort all other running tests
         @running = []
-      else
-        @running.delete worker
-        @finished << worker
       end
       fire :on_worker_finished, worker
     end
