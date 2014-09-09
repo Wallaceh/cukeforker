@@ -180,10 +180,12 @@ module CukeForker
         workers[3].stub(:finished? => true)
         queue.fill
         queue.poll
-        queue.instance_variable_get(:@pending).should be_empty
-        queue.instance_variable_get(:@running).should be_empty
+
+        queue.should_not be_backed_up
+        queue.should be_empty
         queue.instance_variable_get(:@finished).should == [ workers[0], workers[3] ]
-        queue.has_failures?.should be_true
+
+        queue.should have_failures
       end
     end
 

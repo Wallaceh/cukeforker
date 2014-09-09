@@ -130,9 +130,19 @@ module CukeForker
     end
 
     it "can kill the child process" do
-      Process.stub(:kill)
-      Process.stub(:wait)
+      worker.stub(:pid => $$)
+
+      Process.should_receive(:kill)
+      Process.should_receive(:wait)
+
       worker.kill
+    end
+
+    it "ignores failures when killing the child" do
+      worker.stub(:pid => $$)
+
+      Process.should_receive(:kill).and_raise(Errno::ECHILD)
+      worker.kill.should be_nil
     end
 
   end # Worker

@@ -74,14 +74,12 @@ module CukeForker
     end
 
     def kill
-      if pid
-        begin
-          Process.kill("TERM", pid)
-          Process.wait(pid)
-        rescue
-          # Could not kill worker #{w.feature}
-        end
-      end
+      return unless pid
+
+      Process.kill("TERM", pid)
+      Process.wait(pid)
+    rescue
+      # could not kill worker, ignore
     end
 
     private
