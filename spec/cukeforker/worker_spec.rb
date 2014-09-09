@@ -115,5 +115,12 @@ module CukeForker
       Process.stub(:waitpid2).and_raise(Errno::ESRCH)
       worker.should be_finished
     end
+
+    it "can kill the child process" do
+      Process.stub(:kill)
+      Process.stub(:wait)
+      worker.kill
+    end
+
   end # Worker
 end # CukeForker
