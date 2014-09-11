@@ -76,7 +76,7 @@ module CukeForker
     def kill
       if pid
         begin
-          Process.kill("TERM", pid)
+          Process.kill("INT", pid)
           Process.wait(pid)
         rescue
           # Could not kill worker #{w.feature}
