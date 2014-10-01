@@ -33,6 +33,9 @@ module CukeForker
 
     def start
       @pid = Process.fork {
+        # make sure all workers die if cukeforker is killed
+        Process.setpgid 0, 0
+
         changed
         notify_observers :on_worker_forked, self
         execute_cucumber

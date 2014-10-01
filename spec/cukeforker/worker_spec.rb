@@ -60,6 +60,8 @@ module CukeForker
 
     it "runs a passing cuke and exits with 0" do
       Process.should_receive(:fork).and_yield.and_return(1234)
+      Process.should_receive(:setpgid).with(0,0)
+
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
 
@@ -71,6 +73,8 @@ module CukeForker
 
     it "runs a failing cuke and exits with 1" do
       Process.should_receive(:fork).and_yield.and_return(1234)
+      Process.should_receive(:setpgid).with(0,0)
+
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
 
