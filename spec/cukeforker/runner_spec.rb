@@ -126,5 +126,25 @@ module CukeForker
       end
     end
 
+    context 'exit status' do
+      let(:queue)    { double(Queue) }
+      let(:runner)   { Runner.new(queue) }
+
+      it 'returns true when there are no test failures' do
+        queue.stub(:has_failures? => false)
+        queue.should_receive(:process).with 0.2 # poll interval
+        queue.should_receive(:wait_until_finished)
+
+        expect(runner.run).to be_true
+      end
+
+      it 'returns false when there are test failures' do
+        queue.stub(:has_failures? => true)
+        queue.should_receive(:process).with 0.2 # poll interval
+        queue.should_receive(:wait_until_finished)
+
+        expect(runner.run).to be_false
+      end
+    end
   end # Runner
 end # CukeForker

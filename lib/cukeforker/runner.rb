@@ -99,9 +99,11 @@ module CukeForker
       start
       process
       stop
+      !@queue.has_failures?
     rescue Interrupt
       fire :on_run_interrupted
       stop
+      false
     rescue StandardError
       fire :on_run_interrupted
       stop
