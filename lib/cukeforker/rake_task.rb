@@ -35,9 +35,7 @@ module CukeForker
     end
 
     def run_cukeforker
-      unless CukeForker::Runner.run(@features, :extra_args => @extra_args)
-        raise 'Test failures'
-      end
+      CukeForker::Runner.run(@features, :extra_args => @extra_args)
     end
   end
 end

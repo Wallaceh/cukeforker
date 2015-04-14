@@ -39,9 +39,9 @@ describe CukeForker::RakeTask do
         task.verbose = false
       end
 
-      expect(CukeForker::Runner).to receive(:run).and_return(false)
+      expect(CukeForker::Runner).to receive(:run).and_raise(CukeForker::TestFailureError)
 
-      expect { Rake::Task['cukeforker'].execute }.to raise_error(Exception)
+      expect { Rake::Task['cukeforker'].execute }.to raise_error(CukeForker::TestFailureError)
     end
   end
 end

@@ -127,23 +127,23 @@ module CukeForker
     end
 
     context 'exit status' do
-      let(:queue)    { double(Queue) }
-      let(:runner)   { Runner.new(queue) }
+      let(:queue) { double(Queue) }
+      let(:runner) { Runner.new(queue) }
 
       it 'returns true when there are no test failures' do
         queue.stub(:has_failures? => false)
-        queue.should_receive(:process).with 0.2 # poll interval
-        queue.should_receive(:wait_until_finished)
+        expect(queue).to receive(:process).with(0.2)
+        expect(queue).to receive(:wait_until_finished)
 
-        expect(runner.run).to be_true
+        expect { runner.run }.to_not raise_error(TestFailureError)
       end
 
       it 'returns false when there are test failures' do
         queue.stub(:has_failures? => true)
-        queue.should_receive(:process).with 0.2 # poll interval
-        queue.should_receive(:wait_until_finished)
+        expect(queue).to receive(:process).with(0.2)
+        expect(queue).to receive(:wait_until_finished).twice
 
-        expect(runner.run).to be_false
+        expect { runner.run }.to raise_error(TestFailureError)
       end
     end
   end # Runner
