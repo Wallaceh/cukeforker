@@ -6,8 +6,4 @@ split      = ARGV.index("--")
 extra_args = ARGV[0..(split-1)]
 features   = ARGV[(split+1)..-1]
 
-if CukeForker::Runner.run(features, :extra_args => extra_args)
-  exit 0
-else
-  exit 1
-end
+CukeForker::Runner.run(features, :extra_args => extra_args)
