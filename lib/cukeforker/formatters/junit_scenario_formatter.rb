@@ -1,5 +1,5 @@
 require 'cucumber/formatter/junit'
-require 'cucumber/formatter/ordered_xml_markup'
+
 module CukeForker
   module Formatters
     class JunitScenarioFormatter < Cucumber::Formatter::Junit
@@ -19,8 +19,8 @@ module CukeForker
         end
       end
 
-      def after_feature_element(feature_element)
-        @testsuite = Cucumber::Formatter::OrderedXmlMarkup.new( :indent => 2 )
+      def end_feature(feature_element)
+        @testsuite = Builder::XmlMarkup.new(:indent => 2)
         @testsuite.instruct!
         @testsuite.testsuite(
           :failures => @failures,

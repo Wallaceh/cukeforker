@@ -1,15 +1,15 @@
-require 'gherkin/tag_expression'
 module CukeForker
   module Formatters
     class ScenarioLineLogger
       attr_reader :scenarios
 
-      def initialize(tag_expression = Gherkin::TagExpression.new([]))
+      def initialize(tag_expression = Cucumber::Core::Gherkin::TagExpression.new([]))
         @scenarios = []
         @tag_expression = tag_expression
       end
 
       def visit_feature_element(feature_element)
+        binding.pry
         if @tag_expression.evaluate(feature_element.source_tags)
           line_number = if feature_element.respond_to?(:line)
                           feature_element.line

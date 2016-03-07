@@ -1,4 +1,4 @@
-require 'cucumber/runtime/features_loader'
+#require 'cucumber/runtime/features_loader'
 
 module CukeForker
 
@@ -25,15 +25,25 @@ module CukeForker
     end
 
     def self.tagged(tags)
-      tag_expression = Gherkin::TagExpression.new(tags)
+      tag_expression = Cucumber::Core::Gherkin::TagExpression.new(tags)
       scenario_line_logger = CukeForker::Formatters::ScenarioLineLogger.new(tag_expression)
-      loader = Cucumber::Runtime::FeaturesLoader.new(feature_files, [], tag_expression)
+      cuke("--no-color", "--require", "features", "--dry-run", feature_files)
+      binding.pry
 
-      loader.features.each do |feature|
-        feature.accept(scenario_line_logger)
-      end
+      # loader = Cucumber::Configuration.new({paths: feature_files})
+      # loader.feature_files.each do |feature|
+      #   feature = Cucumber::Core::Gherkin::AstBuilder.new(feature)
+      #   binding.pry
+      #   scenario_line_logger.visit_feature_element(feature)
+      # end
 
       scenario_line_logger.scenarios
+    end
+
+    def self.cuke(*args)
+      cuke_config = Cucumber::Cli::Configuration.new
+      cuke_config.parse!(args)
+      @cuke_runtime = Cucumber::Runtime.new(cuke_config)
     end
 
     def self.feature_files
