@@ -34,7 +34,7 @@ module CukeForker
         expected_args = formats.flat_map do |f|
           %W[--format #{f} --out #{path}/some_feature_51.#{f}]
         end
-        worker.args.each_cons(expected_args.size).include?(expected_args).should be_true
+        worker.args.each_cons(expected_args.size).include?(expected_args).should be_truthy
       end
     end
 

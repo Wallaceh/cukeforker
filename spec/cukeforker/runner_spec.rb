@@ -135,7 +135,7 @@ module CukeForker
         queue.should_receive(:process).with 0.2 # poll interval
         queue.should_receive(:wait_until_finished)
 
-        expect(runner.run).to be_true
+        expect(runner.run).to be_truthy
       end
 
       it 'returns false when there are test failures' do
@@ -143,7 +143,7 @@ module CukeForker
         queue.should_receive(:process).with 0.2 # poll interval
         queue.should_receive(:wait_until_finished)
 
-        expect(runner.run).to be_false
+        expect(runner.run).to be_falsey
       end
     end
   end # Runner

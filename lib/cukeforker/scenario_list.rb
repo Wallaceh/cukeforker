@@ -1,10 +1,8 @@
 class ScenarioList
   attr_accessor :scenarios
 
-  @@scenarios ||= []
-
-  def self.scenarios
-    @@scenarios
+  def scenarios
+    @scenarios
   end
 
   def before_test_step(test_step)
@@ -17,7 +15,8 @@ class ScenarioList
   end
 
   def after_test_case(test_case, result)
-    @@scenarios << [test_case.feature.file, test_case.location.line].join(':')
+    @scenarios ||= []
+    @scenarios << [test_case.feature.file, test_case.location.line].join(':')
   end
 
   def done
