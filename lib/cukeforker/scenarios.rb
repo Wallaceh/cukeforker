@@ -5,11 +5,21 @@ module CukeForker
   class Scenarios
     include Cucumber::Core
 
+    def self.by_args(args)
+      options = Cucumber::Cli::Options.new(STDOUT, STDERR, :default_profile => 'default')
+      tagged(options.parse!(args)[:tag_expressions])
+    end
+
     def self.all
+      any_tag = []
+      tagged any_tag
+    end
+
+    def self.tagged(tags)
       feature_files.each do |feature|
         source = CukeForker::NormalisedEncodingFile.read(feature)
         file = Cucumber::Core::Gherkin::Document.new(feature, source)
-        self.new.execute([file], ScenarioList.new, [Cucumber::Core::Test::TagFilter.new(['@wallace'])])
+        self.new.execute([file], ScenarioList.new, [Cucumber::Core::Test::TagFilter.new(tags)])
       end
       ScenarioList.scenarios
     end
