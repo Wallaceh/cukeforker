@@ -26,8 +26,8 @@ module CukeForker
     end
 
     context "running a scenario with multiple report formats" do
-      formats = [ :json, :junit ]
-      path    = "some/path"
+      formats = [:json, :junit]
+      path = "some/path"
       let(:worker) { Worker.new("some/feature:51", formats, path) }
 
       it "has an output file for each format specified" do
@@ -60,7 +60,7 @@ module CukeForker
 
     it "runs a passing cuke and exits with 0" do
       Process.should_receive(:fork).and_yield.and_return(1234)
-      Process.should_receive(:setpgid).with(0,0)
+      Process.should_receive(:setpgid).with(0, 0)
 
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
@@ -73,7 +73,7 @@ module CukeForker
 
     it "runs a failing cuke and exits with 1" do
       Process.should_receive(:fork).and_yield.and_return(1234)
-      Process.should_receive(:setpgid).with(0,0)
+      Process.should_receive(:setpgid).with(0, 0)
 
       $stdout.should_receive(:reopen).with("some/path/some_feature.stdout")
       $stderr.should_receive(:reopen).with("some/path/some_feature.stderr")
