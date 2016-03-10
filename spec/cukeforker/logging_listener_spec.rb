@@ -48,8 +48,5 @@ I, [#{timestamp}]  INFO -- : [    run           ] finished, passed
 I, [#{timestamp}]  INFO -- : [    display :15   ] stopping
       OUTPUT
     end
-
-
-
   end # Worker
 end # CukeForker

@@ -2,10 +2,10 @@ require File.expand_path("../../spec_helper", __FILE__)
 
 module CukeForker
   describe VncListener do
-    let(:server)    { double(VncTools::Server, :display => ":15")    }
-    let(:pool)      { double(VncTools::ServerPool)                   }
-    let(:worker)    { double(Worker, :data => OpenStruct.new) }
-    let(:listener)  { VncListener.new pool                  }
+    let(:server) { double(VncTools::Server, :display => ":15") }
+    let(:pool) { double(VncTools::ServerPool) }
+    let(:worker) { double(Worker, :data => OpenStruct.new) }
+    let(:listener) { VncListener.new pool }
 
     it "fetches a display from the pool and assings it to the worker" do
       pool.should_receive(:get).and_return(server)
@@ -34,6 +34,5 @@ module CukeForker
 
       listener.on_worker_forked worker
     end
-
   end # VncListenerServer
 end # CukeForker
