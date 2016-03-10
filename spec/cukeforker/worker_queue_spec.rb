@@ -183,11 +183,10 @@ module CukeForker
 
         queue.should_not be_backed_up
         queue.should be_empty
-        queue.instance_variable_get(:@finished).should == [ workers[0], workers[3] ]
+        queue.instance_variable_get(:@finished).should == [workers[0], workers[3]]
 
         queue.should have_failures
       end
     end
-
- end # WorkerQueue
+  end # WorkerQueue
 end # CukeForker

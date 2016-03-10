@@ -1,19 +1,10 @@
-require 'cucumber/runtime/features_loader'
+require 'cucumber/core'
+require 'cucumber/core/filter'
 
 module CukeForker
-
-  #
-  # CukeForker::Scenarios.by_args(args)
-  #
-  # where 'args' is a String of cucumber options
-  #
-  # For example:
-  # CukeForker::Scenarios.by_args(%W[-p my_profile -t @edition])
-  # will return an array of scenarios and their line numbers that match
-  # the tags specified in the cucumber profile 'my_profile' AND have the '@edition' tag
-  #
-
   class Scenarios
+    include Cucumber::Core
+
     def self.by_args(args)
       options = Cucumber::Cli::Options.new(STDOUT, STDERR, :default_profile => 'default')
       tagged(options.parse!(args)[:tag_expressions])
@@ -25,15 +16,13 @@ module CukeForker
     end
 
     def self.tagged(tags)
-      tag_expression = Gherkin::TagExpression.new(tags)
-      scenario_line_logger = CukeForker::Formatters::ScenarioLineLogger.new(tag_expression)
-      loader = Cucumber::Runtime::FeaturesLoader.new(feature_files, [], tag_expression)
-
-      loader.features.each do |feature|
-        feature.accept(scenario_line_logger)
+      scenario_list = ScenarioList.new
+      feature_files.each do |feature|
+        source = CukeForker::NormalisedEncodingFile.read(feature)
+        file = Cucumber::Core::Gherkin::Document.new(feature, source)
+        self.new.execute([file], scenario_list, [Cucumber::Core::Test::TagFilter.new(tags)])
       end
-
-      scenario_line_logger.scenarios
+      scenario_list.scenarios
     end
 
     def self.feature_files
