@@ -8,6 +8,8 @@ Forking cukes and VNC displays.
 
 ### NB!
 
+Version 1.0.0+ of cukeforker is dependant on Cucumber 2.0+! Update your projects accordingly.
+
 If you're using cukeforker with selenium-webdriver and Firefox, all versions prior to 2.40 has a bug where custom
 Firefox profiles created in a forked process would not get cleaned up. Please make sure you're using selenium-webdriver >= 2.40
 to avoid this.
