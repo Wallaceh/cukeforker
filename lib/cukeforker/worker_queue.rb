@@ -86,6 +86,7 @@ module CukeForker
       running  = @running.size
 
       remaining = pending + running
+      sleep 3
 
       if finished == 0
         result = [Time.now, remaining, finished]

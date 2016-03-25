@@ -40,6 +40,7 @@ I, [#{timestamp}]  INFO -- : [    worker  1     ] forked  : foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] starting: foo/baz
 I, [#{timestamp}]  INFO -- : [    worker  15    ] forked  : foo/baz
 I, [#{timestamp}]  INFO -- : [    eta     10/255] #{Time.now.strftime "%Y-%m-%d %H:%M:%S"}
+I, [#{timestamp}]  INFO -- : [    running       ] ["1", "15"]
 I, [#{timestamp}]  INFO -- : [    worker  1     ] passed  : foo/bar
 I, [#{timestamp}]  INFO -- : [    worker  15    ] failed  : foo/baz
 I, [#{timestamp}]  INFO -- : [    display :15   ] released
