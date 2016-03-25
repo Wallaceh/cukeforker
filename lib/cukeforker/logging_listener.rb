@@ -6,6 +6,7 @@ module CukeForker
 
     def initialize(io = STDOUT)
       @io = io
+      @running = []
     end
 
     def on_run_starting
@@ -13,6 +14,7 @@ module CukeForker
     end
 
     def on_worker_starting(worker)
+      @running << worker.id
       log.info "[    worker  #{worker.id.to_s.ljust 3}   ] starting: #{worker.feature}"
     end
 
@@ -21,6 +23,7 @@ module CukeForker
     end
 
     def on_worker_finished(worker)
+      @running.delete(worker.id)
       log.info "[    worker  #{worker.id.to_s.ljust 3}   ] #{status_string(worker.failed?).ljust(8)}: #{worker.feature}"
     end
 
@@ -52,6 +55,7 @@ module CukeForker
     def on_eta(eta, remaining, finished)
       counts = "#{remaining}/#{finished}".ljust(6)
       log.info "[    eta     #{counts}] #{eta.strftime TIME_FORMAT}"
+      log.info "[    running       ] #{@running}"
     end
 
     private

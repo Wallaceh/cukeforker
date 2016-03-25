@@ -7,3 +7,4 @@ Gemfile.lock
 .idea
 .ruby-version
 /coverage
+.DS_STORE
