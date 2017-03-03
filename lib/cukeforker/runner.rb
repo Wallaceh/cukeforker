@@ -34,6 +34,7 @@ module CukeForker
       :format     => :html,
       :delay      => 0,
       :fail_fast  => false,
+      :verbose_log    => false
     }
 
     def self.run(features, opts = {})
@@ -50,9 +51,10 @@ module CukeForker
       extra_args = Array(opts[:extra_args])
       delay      = opts[:delay]
       fail_fast  = opts[:fail_fast]
+      verbose_log    = opts[:verbose_log]
 
       if opts[:log]
-        listeners << LoggingListener.new
+        listeners << LoggingListener.new(verbose_log)
       end
 
       if vnc = opts[:vnc]

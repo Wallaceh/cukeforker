@@ -4,9 +4,10 @@ module CukeForker
   class LoggingListener < AbstractListener
     TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-    def initialize(io = STDOUT)
+    def initialize(io=STDOUT, verbose_log=false)
       @io = io
       @running = []
+      @verbose = verbose_log
     end
 
     def on_run_starting
@@ -54,14 +55,24 @@ module CukeForker
 
     def on_eta(eta, remaining, finished)
       counts = "#{remaining}/#{finished}".ljust(6)
+      scenario = parse_scenario_name(worker.feature)
       log.info "[    eta     #{counts}] #{eta.strftime TIME_FORMAT}"
-      log.info "[    running       ] #{@running}"
+      if @verbose
+        log.info "[    running       ] #{@running}-#{scenario}"
+      else
+        log.info "[    running       ] #{@running}"
+      end
+
     end
 
     private
 
     def status_string(failed)
       failed ? 'failed' : 'passed'
+    end
+
+    def parse_scenario_name(scenario)
+      scenario.split('/').last
     end
 
     def log
