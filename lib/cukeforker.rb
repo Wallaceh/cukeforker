@@ -1,6 +1,6 @@
-unless RUBY_PLATFORM =~ /darwin|linux/
-  raise "CukeForker only supported on *nix/MRI"
-end
+# unless RUBY_PLATFORM =~ /darwin|linux/
+#   raise "CukeForker only supported on *nix/MRI"
+# end
 
 
 require "cucumber/cli/main"
