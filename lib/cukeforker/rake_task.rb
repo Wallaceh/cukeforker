@@ -6,7 +6,7 @@ module CukeForker
     attr_accessor :name
     attr_accessor :verbose
     attr_accessor :features
-    attr_accessor :extra_args
+    attr_accessor :opts
 
     def initialize(*args, &task_block)
       setup_ivars(args)
@@ -29,13 +29,13 @@ module CukeForker
 
       split = args.index("--")
       if split
-        @extra_args = args[0..(split-1)]
+        @opts = args[0..(split-1)]
         @features = args[(split+1)..-1]
       end
     end
 
     def run_cukeforker
-      unless CukeForker::Runner.run(@features, :extra_args => @extra_args)
+      unless CukeForker::Runner.run(@features, @opts)
         raise 'Test failures'
       end
     end
