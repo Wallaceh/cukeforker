@@ -20,7 +20,13 @@ module CukeForker
       feature_files.each do |feature|
         source = CukeForker::NormalisedEncodingFile.read(feature)
         file = Cucumber::Core::Gherkin::Document.new(feature, source)
-        self.new.execute([file], scenario_list, [Cucumber::Core::Test::TagFilter.new(tags)])
+        filters = [Cucumber::Core::Test::TagFilter.new(tags)]
+        if Cucumber::VERSION[0].to_i < 3
+          self.new.execute([file], scenario_list, filters)
+        else
+          # For Cucumber 3.0+ API, we have to flip the last two parameters
+          self.new.execute([file], filters, scenario_list)
+        end
       end
       scenario_list.scenarios
     end
