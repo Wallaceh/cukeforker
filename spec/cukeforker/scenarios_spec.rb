@@ -58,7 +58,7 @@ module CukeForker
             Given nothing else happens
       GHERKIN
 
-      all_scenarios = Scenarios.by_args(%W[-t @find_me,@me_too])
+      all_scenarios = Scenarios.by_args(["-t @find_me or @me_too"])
 
       all_scenarios.length.should == 2
       all_scenarios[0].should == "features/test1.feature:3"
@@ -78,7 +78,7 @@ module CukeForker
             Given nothing else happens
       GHERKIN
 
-      all_scenarios = Scenarios.by_args(%W[-t @find_me -t @me_too])
+      all_scenarios = Scenarios.by_args(["-t @find_me and @me_too"])
 
       all_scenarios.length.should == 1
       all_scenarios[0].should == "features/test1.feature:3"
@@ -97,7 +97,7 @@ module CukeForker
             Given nothing else happens
       GHERKIN
 
-      all_scenarios = Scenarios.by_args(%W[-t ~@find_me])
+      all_scenarios = Scenarios.by_args(["-t not @find_me"])
 
       all_scenarios.length.should == 1
       all_scenarios[0].should == "features/test1.feature:7"
