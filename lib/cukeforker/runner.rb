@@ -26,8 +26,8 @@ module CukeForker
 
     DEFAULT_OPTIONS = {
       :max        => 2,
-      :vnc        => false,
-      :record     => false,
+      #:vnc        => false,
+      #:record     => false,
       :notify     => nil,
       :out        => Dir.pwd,
       :log        => true,
@@ -55,25 +55,25 @@ module CukeForker
         listeners << LoggingListener.new
       end
 
-      if vnc = opts[:vnc]
-        if vnc.kind_of?(Class)
-          vnc_pool = VncTools::ServerPool.new(max, vnc)
-        else
-          vnc_pool = VncTools::ServerPool.new(max)
-        end
+      # if vnc = opts[:vnc]
+      #   if vnc.kind_of?(Class)
+      #     vnc_pool = VncTools::ServerPool.new(max, vnc)
+      #   else
+      #     vnc_pool = VncTools::ServerPool.new(max)
+      #   end
 
-        listener = VncListener.new(vnc_pool)
+      #   listener = VncListener.new(vnc_pool)
 
-        if record = opts[:record]
-          if record.kind_of?(Hash)
-            listeners << RecordingVncListener.new(listener, record)
-          else
-            listeners << RecordingVncListener.new(listener)
-          end
-        else
-          listeners << listener
-        end
-      end
+      #   if record = opts[:record]
+      #     if record.kind_of?(Hash)
+      #       listeners << RecordingVncListener.new(listener, record)
+      #     else
+      #       listeners << RecordingVncListener.new(listener)
+      #     end
+      #   else
+      #     listeners << listener
+      #   end
+      # end
 
       queue = WorkerQueue.new(max, delay, fail_fast)
       features.each do |feature|
@@ -85,7 +85,7 @@ module CukeForker
       listeners.each { |l|
         queue.add_observer l
         runner.add_observer l
-        vnc_pool.add_observer l if opts[:vnc]
+        #vnc_pool.add_observer l if opts[:vnc]
       }
 
       runner
